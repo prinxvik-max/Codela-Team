@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="loginpage.css" />
+  </head>
+  <body>
+    <main class="loginContainer">
+      <section class="welcome-section">
+        <div class="welcome-content">
+          <span class="brand-badge">TapChat</span>
+          <h1>Welcome back</h1>
+          <h3>Sign in to continue</h3>
+          <p>
+            Stay connected with your people, messages, and updates in one simple
+            place.
+          </p>
+        </div>
+
+        <div class="circle circle-one"></div>
+        <div class="circle circle-two"></div>
+        <div class="circle circle-three"></div>
+      </section>
+
+      <section class="signin-section">
+        <div class="signin-content">
+          <p class="eyebrow">Account access</p>
+          <h2>Sign In</h2>
+          <p class="description">Enter your details to access your account.</p>
+
+          <form id="loginform" novalidate>
+            <div class="input-group">
+              <label for="username">Email Address</label>
+              <div class="field-with-icon">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M20 21a8 8 0 0 0-16 0"></path>
+                    <circle cx="12" cy="8" r="4"></circle>
+                  </svg>
+                </span>
+                <input
+                  id="username"
+                  name="username"
+                  type="email"
+                  placeholder="username@email.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="password">Password</label>
+              <div class="field-with-icon password-box">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                    <path d="M8 11V8a4 4 0 1 1 8 0v3"></path>
+                  </svg>
+                </span>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  id="toggle-password"
+                  aria-label="Show password"
+                >
+                  Show
+                </button>
+              </div>
+            </div>
+
+            <a href="#" class="forgot" id="forgotpassword">Forgot Password?</a>
+
+            <button type="submit" class="login-button">Login →</button>
+
+            <p id="message" class="message" aria-live="polite"></p>
+          </form>
+
+          <div class="signup">
+            New member?
+            <a href="#" id="signuplink">Create account</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const togglePassword = document.getElementById("toggle-password");
+      const passwordInput = document.getElementById("password");
+      const form = document.getElementById("loginform");
+      const message = document.getElementById("message");
+
+      togglePassword.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+        togglePassword.textContent = isPassword ? "Hide" : "Show";
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!username || !password) {
+          message.textContent = "Please enter your email and password.";
+          message.classList.add("error");
+          return;
+        }
+
+        message.textContent = "Login successful!";
+        message.classList.remove("error");
+      });
+    </script>
+  </body>
+</html>
