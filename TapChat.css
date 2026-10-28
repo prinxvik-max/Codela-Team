@@ -86,6 +86,16 @@ a {
   font-weight: 700;
 }
 
+.contact-button:hover{
+  opacity: 0.2;
+}
+
+.contact-button:active{
+  border-color: #593722;
+  color: #ffff;
+  opacity: 1;
+}
+
 .hero {
   position: relative;
   display: grid;
@@ -224,6 +234,17 @@ a {
     width: min(75%, 20rem);
     max-height: 55vh;
   }
+
+.contact-button:hover{
+  opacity: 0.2;
+}
+
+.contact-button:active{
+  border-color: #593722;
+  color: #ffff;
+  opacity: 1;
+}
+
 }
 
 @media (max-width: 420px) {
@@ -249,6 +270,17 @@ a {
   .hero h1 {
     font-size: clamp(2.35rem, 10vw, 2.75rem);
   }
+
+.contact-button:hover{
+  opacity: 0.2;
+}
+
+.contact-button:active{
+  border-color: #593722;
+  color: #ffff;
+  opacity: 1;
+}
+
 }
 
 @media (prefers-reduced-motion: reduce) {
