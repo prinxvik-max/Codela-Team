@@ -330,4 +330,30 @@ body {
   .signin-section {
     padding: 36px 22px;
   }
+
+  .field-with-icon{
+    width: 70%;
+  }
+
+  .login-button{
+    width: 70%;
+  }
+
+.welcome-content h1 {
+  color: white;
+}
+
+.welcome-content h3 {
+  color: white;
+}
+
+.welcome-content p {
+  color: white;
+}
+
+.signup{
+  display: flex;
+
+}
+
 }
