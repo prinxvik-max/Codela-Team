@@ -195,27 +195,40 @@ a {
   outline-offset: 4px;
 }
 
-
-.connected{
-  position: absolute;
-  top: 650px;
-  left: 83px;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  
+#features{
+  margin-top: 400px;
 }
+
+
+
+.everything{
+  position: absolute;
+  top: 730px;
+  left: 158px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  line-height: 1.5;
+  transform: scale(1.5);
+}
+
 .tools{
+  position: absolute;
+  top: 760px;
+  left: 115px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  line-height: 1.5;
+  transform: scale(1.2);
   font-size: smaller;
 }
-
 
 .container1{
   background-color:var(--color-accent);
   height: 180px;
-  width: 80%;
+  width: 20%;
   position: absolute;
-  top: 80px;
-  left: -30px;
+  top: 800px;
+  left: 120px;
   border-radius: 5px;
 }
 
@@ -257,10 +270,10 @@ a {
 .container2{
   background-color:var(--color-accent);
   height: 180px;
-  width: 80%;
+  width: 20%;
   position: absolute;
-  top: 80px;
-  left: 260px;
+  top: 800px;
+  left: 380px;
   border-radius: 5px;
   
 }
@@ -303,10 +316,10 @@ a {
 .container3{
   background-color:var(--color-accent);
   height: 180px;
-  width: 80%;
+  width: 20%;
   position: absolute;
-  top: 80px;
-  left: 550px;
+  top: 800px;
+  left: 640px;
   border-radius: 5px;
 }
 
@@ -348,10 +361,10 @@ a {
 .container4{
   background-color:var(--color-accent);
   height: 180px;
-  width: 80%;
+  width: 20%;
   position: absolute;
-  top: 80px;
-  left: 840px;
+  top: 800px;
+  left: 900px;
   border-radius: 5px;
 }
 
@@ -456,6 +469,210 @@ a {
   color: #ffff;
   opacity: 1;
 }
+
+.everything{
+  position: absolute;
+  top: 930px;
+  left: 58px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  line-height: 1.5;
+  transform: scale(1.2);
+}
+
+.tools{
+  position: absolute;
+  top: 960px;
+  left: 35px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  line-height: 1.5;
+  transform: scale(1.05);
+  font-size: smaller;
+}
+
+.container1{
+  background-color:var(--color-accent);
+  height: 180px;
+  width: 40%;
+  position: absolute;
+  top: 1000px;
+  left: 30px;
+  border-radius: 5px;
+}
+
+.message-icon{
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  top: 14px;
+  left:15px;
+  filter: invert(100%);
+}
+
+.message-circle{
+  background-color: var(--color-background);
+  border-radius: 50%;
+  height: 35px;
+  width: 40px;
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  
+}
+
+.message-icon-writeup{
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  font-weight: bold;
+  color: black;
+}
+
+.message-icon-writeup2{
+  position: absolute;
+  top: 75px;
+  left: 10px;
+  color: black;
+}
+
+.container2{
+  background-color:var(--color-accent);
+  height: 180px;
+  width: 40%;
+  position: absolute;
+  top: 1000px;
+  left: 230px;
+  border-radius: 5px;
+  
+}
+
+.people-icon{
+  height: 30px;
+  width: 25px;
+  position: absolute;
+  top: 14px;
+  left:18px;
+  filter: invert(100%);
+}
+
+.people-circle{
+  background-color: var(--color-background);
+  border-radius: 50%;
+  height: 35px;
+  width: 40px;
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  
+}
+
+.people-icon-writeup{
+  position: absolute;
+  top: 50px;
+  left: 8px;
+  font-weight: bold;
+  color: black;
+}
+
+.people-icon-writeup2{
+  position: absolute;
+  top: 75px;
+  left: 8px;
+  color: black;
+}
+
+
+.container3{
+  background-color:var(--color-accent);
+  height: 180px;
+  width: 40%;
+  position: absolute;
+  top: 1200px;
+  left: 30px;
+  border-radius: 5px;
+}
+
+.image-icon{
+  height: 30px;
+  width: 25px;
+  position: absolute;
+  top: 14px;
+  left:18px;
+  filter: invert(100%);
+}
+
+.image-circle{
+  background-color: var(--color-background);
+  border-radius: 50%;
+  height: 35px;
+  width: 40px;
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  
+}
+
+.image-icon-writeup{
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  font-weight: bold;
+  color: black;
+}
+
+.image-icon-writeup2{
+  position: absolute;
+  top: 75px;
+  left: 10px;
+  color: black;
+}
+
+.container4{
+  background-color:var(--color-accent);
+  height: 180px;
+  width: 40%;
+  position: absolute;
+  top: 1200px;
+  left: 230px;
+  border-radius: 5px;
+}
+
+.notification-icon{
+  height: 30px;
+  width: 25px;
+  position: absolute;
+  top: 14px;
+  left:18px;
+  filter: invert(100%);
+}
+
+.notification-circle{
+  background-color: var(--color-background);
+  border-radius: 50%;
+  height: 35px;
+  width: 40px;
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  
+}
+
+.notification-icon-writeup{
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  font-weight: bold;
+  color: black;
+}
+
+.notification-icon-writeup2{
+  position: absolute;
+  top: 75px;
+  left: 10px;
+  color: black;
+}
+
 
 }
 
