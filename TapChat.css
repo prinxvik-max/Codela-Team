@@ -316,7 +316,7 @@ a {
   border-radius: 50%;
 }*/
 
-@media (max-width: 767px) {
+@media (max-width: 760px) {
   .site-header {
     min-height: 5rem;
   }
