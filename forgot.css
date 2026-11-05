@@ -327,7 +327,11 @@ body {
     padding: 36px 22px;
   }
   .field-with-icon{
-    width: 100%;
+    width: 70%;
+  }
+
+  .login-button{
+    width: 70%;
   }
 
   .welcome-content h1{
