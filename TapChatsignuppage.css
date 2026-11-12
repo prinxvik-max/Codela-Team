@@ -30,8 +30,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  align-items: safe center;
   min-height: 100vh;
-  padding: 0 20px 20px;
+  padding: 20px;
   overflow-x: hidden;
 }
 
