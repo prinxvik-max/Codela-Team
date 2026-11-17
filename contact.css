@@ -1,0 +1,239 @@
+body {
+  min-height: 100vh;
+  height: auto;
+  padding: 32px 20px;
+  overflow-y: auto;
+  background: #593722;
+  background-size: 240px 240px, 150px 150px, 100px 100px;
+  background-position: left 5% top 8%, right 7% top 16%, right 17% bottom 10%;
+}
+
+.contact-container {
+  width: min(940px, 100%);
+  min-height: 540px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  overflow: hidden;
+  border: 1px solid rgba(89, 55, 34, 0.08);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 28px 60px var(--shadow);
+  animation: contact-enter 500ms ease-out both;
+}
+
+.contact-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 48px;
+  background: linear-gradient(145deg, #fffdfb, #f3e8df);
+}
+
+.school-name {
+  margin-bottom: auto;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.intro-label,
+.detail-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.intro-label {
+  margin-bottom: 12px;
+}
+
+.contact-intro h1 {
+  margin-bottom: 14px;
+  color: var(--brand);
+  font-size: clamp(2.5rem, 5vw, 3.6rem);
+  line-height: 1.05;
+}
+
+.intro-copy {
+  max-width: 290px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 40px;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-link svg,
+.address-link svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.home-link:hover,
+.address-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 38px;
+  padding: 64px clamp(28px, 6vw, 72px);
+}
+
+.detail-block {
+  display: grid;
+  gap: 10px;
+}
+
+.detail-value {
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.address-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+.address-link svg {
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+}
+
+.detail-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.social-block {
+  display: grid;
+  gap: 14px;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-links a {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--brand);
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.social-links svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.social-links a:nth-child(2) svg,
+.social-links a:nth-child(4) svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.social-links .icon-dot {
+  fill: currentColor;
+  stroke: none;
+}
+
+.school-name:focus-visible,
+.home-link:focus-visible,
+.detail-value:focus-visible,
+.social-links a:focus-visible {
+  outline: 3px solid #a76945;
+  outline-offset: 4px;
+}
+
+@keyframes contact-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 680px) {
+  .contact-container {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .contact-intro {
+    min-height: 310px;
+    padding: 32px 28px;
+  }
+
+  .contact-intro h1 {
+    font-size: 2.8rem;
+  }
+
+  .home-link {
+    padding-top: 28px;
+  }
+
+  .contact-details {
+    gap: 30px;
+    padding: 38px 28px 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
