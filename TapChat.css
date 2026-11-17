@@ -243,7 +243,7 @@ a {
 .container4 {
   position: relative;
   min-height: 180px;
-  padding: 1.1rem 1rem 1.2rem;
+  padding: 0 1rem 1.2rem;
   border-radius: 12px;
   background-color: var(--color-accent);
   overflow: hidden;
@@ -254,7 +254,7 @@ a {
 .image-circle,
 .notification-circle {
   position: absolute;
-  top: 1rem;
+  top: 19.5rem;
   left: 1rem;
   width: 60px;
   height: 50px;
@@ -267,8 +267,8 @@ a {
 .image-icon,
 .notification-icon {
   position: absolute;
-  top: 1.45rem;
-  left: 1.75rem;
+  top: 20rem;
+  left: 1.8rem;
   width: 30px;
   height: 30px;
   filter: invert(100%);
@@ -305,6 +305,18 @@ a {
   width: 100%;
   position: absolute;
   top: 150px;
+}
+
+.instant-pic,
+.group-pic,
+.media-pic,
+.notification-pic {
+height: 50%;
+width: 272px;
+position: inherit;
+top: 0px;
+right:16px;
+
 }
 
 /*.feature-photo{
@@ -396,19 +408,27 @@ a {
     --page-gutter: 1.25rem;
   }
 
+  .site-header {
+    min-height: 4.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
   .logo {
-    width: 5rem;
+    width: 4rem;
+    flex-shrink: 0;
   }
 
   .site-nav {
-    gap: 0.75rem;
-    font-size: 0.8rem;
+    min-width: 0;
+    gap: clamp(0.35rem, 2vw, 0.6rem);
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
   }
 
   .contact-button {
     min-height: 2.25rem;
-    padding: 0 0.65rem;
-    font-size: 0.75rem;
+    padding: 0 0.45rem;
+    font-size: 0.7rem;
   }
 
   .hero h1 {

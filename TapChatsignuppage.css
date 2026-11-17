@@ -222,6 +222,8 @@ body {
 }
 
 .dob-group {
+  width: 100%;
+  min-width: 0;
   border: 0;
 }
 
@@ -233,9 +235,11 @@ body {
 }
 
 .dob-options {
+  width: 100%;
+  min-width: 0;
   display: grid;
-  grid-template-columns: 0.8fr 1.4fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(4px, 2vw, 10px);
 }
 
 .dob-options select {
