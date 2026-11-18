@@ -1,0 +1,1801 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#302319">
+<title>Private Chat | TapChat</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root {
+  --dark:#302319;
+  --dark2:#493629;
+  --brown:#79563D;
+  --accent:#B17C51;
+  --cream:#F8F3EB;
+  --surface:#FFFDF9;
+  --soft:#EDE3D6;
+  --muted:#968779;
+  --text:#35281F;
+  --green:#367B58;
+  --red:#B34D43;
+  --shadow:0 12px 35px rgba(48,35,25,.07);
+  --radius:17px;
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button,input,textarea {font:inherit}
+button {cursor:pointer}
+
+.app {
+  min-height:100vh;
+  display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width:235px;
+  background:var(--dark);
+  color:white;
+  padding:27px 17px;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.logo-space {
+  height:65px;
+  display:flex;
+  align-items:center;
+  padding-left:12px;
+  margin-bottom:30px;
+}
+
+.logo-space span {
+  font-size:10px;
+  color:#BDA58F;
+  letter-spacing:2px;
+}
+
+.nav-label {
+  color:#A99788;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.8px;
+  padding:0 12px;
+  margin-bottom:13px;
+}
+
+.nav-links {
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.nav-links a {
+  text-decoration:none;
+  color:#D3C5B8;
+  padding:13px;
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:12px;
+  font-weight:600;
+  transition:.2s;
+}
+
+.nav-links a i {
+  width:19px;
+  text-align:center;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background:#55402F;
+  color:#F2D8B9;
+}
+
+.sidebar-bottom {
+  margin-top:auto;
+  border-top:1px solid #554435;
+  padding-top:18px;
+}
+
+/* MAIN */
+
+.main {
+  flex:1;
+  min-width:0;
+  padding:25px 30px 30px;
+  max-width:1600px;
+  margin:0 auto;
+  width:100%;
+}
+
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:23px;
+}
+
+.breadcrumb {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.breadcrumb strong {color:var(--dark)}
+
+.account {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:11px;
+  color:var(--brown);
+  font-weight:700;
+}
+
+.account-avatar {
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+}
+
+/* CHAT WORKSPACE */
+
+.chat-workspace {
+  height:calc(100vh - 110px);
+  min-height:530px;
+  max-height:850px;
+  display:grid;
+  grid-template-columns:320px minmax(0,1fr);
+  background:var(--surface);
+  border:1px solid #EDE4D9;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+
+/* CONTACT PANEL */
+
+.contact-panel {
+  border-right:1px solid #EEE7DE;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  background:#FFFCF7;
+}
+
+.contact-heading {
+  padding:22px 19px 17px;
+  border-bottom:1px solid #EEE7DE;
+}
+
+.contact-heading h1 {
+  font-family:'Playfair Display',serif;
+  font-size:24px;
+  color:var(--dark);
+  margin-bottom:5px;
+}
+
+.contact-heading p {
+  font-size:10px;
+  color:var(--muted);
+}
+
+.contact-search {
+  padding:14px 15px;
+}
+
+.search-box {
+  position:relative;
+}
+
+.search-box i {
+  position:absolute;
+  left:12px;
+  top:12px;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.search-box input {
+  width:100%;
+  border:1px solid #E8DED2;
+  background:#F9F5EF;
+  border-radius:9px;
+  padding:10px 12px 10px 33px;
+  outline:none;
+  font-size:11px;
+}
+
+.search-box input:focus {
+  border-color:var(--accent);
+}
+
+.contact-label {
+  padding:2px 18px 10px;
+  color:var(--muted);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1.4px;
+}
+
+.contact-list {
+  flex:1;
+  overflow-y:auto;
+  padding:0 9px 12px;
+}
+
+.contact-item {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px 9px;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  text-align:left;
+  transition:.2s;
+}
+
+.contact-item:hover {
+  background:#F6EFE5;
+}
+
+.contact-item.active {
+  background:#EFE3D4;
+}
+
+.avatar {
+  width:43px;
+  height:43px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:#E9D9C6;
+  color:var(--brown);
+  display:grid;
+  place-items:center;
+  font-size:14px;
+  font-weight:800;
+  overflow:hidden;
+}
+
+.avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.contact-info {
+  flex:1;
+  min-width:0;
+}
+
+.contact-info strong {
+  display:block;
+  font-size:11px;
+  color:var(--dark);
+  margin-bottom:5px;
+}
+
+.contact-info span {
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.contact-empty {
+  text-align:center;
+  padding:35px 15px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.7;
+}
+
+/* CONVERSATION PANEL */
+
+.conversation-panel {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  background:#FBF8F3;
+}
+
+.chat-header {
+  min-height:75px;
+  padding:14px 20px;
+  background:var(--surface);
+  border-bottom:1px solid #EEE7DE;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.back-to-contacts {
+  display:none;
+  border:0;
+  background:#F1E8DC;
+  color:var(--brown);
+  width:34px;
+  height:34px;
+  border-radius:9px;
+}
+
+.chat-person {
+  flex:1;
+  min-width:0;
+}
+
+.chat-person strong {
+  display:block;
+  font-size:13px;
+  color:var(--dark);
+  margin-bottom:4px;
+}
+
+.chat-person span {
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.chat-person .connection-label {
+  color:var(--green);
+}
+
+.header-icon {
+  width:35px;
+  height:35px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#F0E5D8;
+  color:var(--brown);
+}
+
+/* MESSAGES */
+
+.messages-area {
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  padding:22px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  scroll-behavior:smooth;
+}
+
+.day-divider {
+  text-align:center;
+  margin:8px 0;
+}
+
+.day-divider span {
+  background:#EFE6DA;
+  color:var(--muted);
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:9px;
+  font-weight:600;
+}
+
+.message-row {
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  max-width:78%;
+}
+
+.message-row.mine {
+  align-self:flex-end;
+  flex-direction:row-reverse;
+}
+
+.message-avatar {
+  width:27px;
+  height:27px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:#E8D8C5;
+  color:var(--brown);
+  display:grid;
+  place-items:center;
+  font-size:9px;
+  font-weight:800;
+  overflow:hidden;
+}
+
+.message-avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.message-content {
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  min-width:0;
+}
+
+.message-bubble {
+  padding:11px 14px;
+  border-radius:14px 14px 14px 4px;
+  background:#EEE4D8;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.65;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
+}
+
+.mine .message-bubble {
+  background:var(--dark);
+  color:#FFF9F1;
+  border-radius:14px 14px 4px 14px;
+}
+
+.message-meta {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:9px;
+  color:#A39486;
+}
+
+.mine .message-meta {
+  justify-content:flex-end;
+}
+
+.message-meta .read-icon {
+  color:var(--green);
+}
+
+.message-meta .pending-icon {
+  color:#B8A58E;
+}
+
+/* CHAT EMPTY */
+
+.chat-empty {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  text-align:center;
+}
+
+.chat-empty-icon {
+  width:76px;
+  height:76px;
+  display:grid;
+  place-items:center;
+  border-radius:25px;
+  background:#F0E5D8;
+  color:var(--brown);
+  font-size:27px;
+  margin-bottom:20px;
+}
+
+.chat-empty h2 {
+  font-family:'Playfair Display',serif;
+  font-size:23px;
+  color:var(--dark);
+  margin-bottom:9px;
+}
+
+.chat-empty p {
+  font-size:11px;
+  color:var(--muted);
+  max-width:290px;
+  line-height:1.8;
+}
+
+.loading {
+  text-align:center;
+  padding:35px 15px;
+  font-size:11px;
+  color:var(--muted);
+}
+
+/* MESSAGE COMPOSER */
+
+.composer {
+  padding:15px 19px;
+  border-top:1px solid #EEE7DE;
+  background:var(--surface);
+}
+
+.composer-form {
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  background:#F7F1E9;
+  border:1px solid #E8DED2;
+  border-radius:13px;
+  padding:8px 9px;
+}
+
+.composer textarea {
+  flex:1;
+  min-width:0;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  padding:8px 5px;
+  font-size:12px;
+  line-height:1.5;
+  max-height:120px;
+  color:var(--text);
+}
+
+.composer textarea::placeholder {
+  color:#A8998A;
+}
+
+.send-button {
+  width:39px;
+  height:39px;
+  flex-shrink:0;
+  border:0;
+  border-radius:11px;
+  background:var(--dark);
+  color:white;
+  display:grid;
+  place-items:center;
+  transition:.2s;
+}
+
+.send-button:hover {
+  background:var(--brown);
+}
+
+.send-button:disabled {
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.composer-note {
+  font-size:9px;
+  color:#A99A8B;
+  margin-top:8px;
+  text-align:center;
+}
+
+.status-message {
+  display:none;
+  margin:12px 17px 0;
+  padding:10px 12px;
+  border-radius:8px;
+  font-size:10px;
+  line-height:1.6;
+}
+
+.status-message.error {
+  display:block;
+  background:#FBEAE7;
+  color:#A33F35;
+}
+
+.status-message.success {
+  display:block;
+  background:#E8F2EA;
+  color:#367B58;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px) {
+  .sidebar {width:190px}
+  .main {padding:20px 16px}
+  .chat-workspace {grid-template-columns:275px minmax(0,1fr)}
+}
+
+@media(max-width:650px) {
+  .app {display:block}
+
+  .sidebar {
+    width:100%;
+    padding:10px 12px;
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+
+  .logo-space {
+    height:24px;
+    margin:0 0 10px;
+    padding-left:5px;
+  }
+
+  .nav-label,.sidebar-bottom {display:none}
+
+  .nav-links {
+    flex-direction:row;
+    overflow-x:auto;
+    scrollbar-width:none;
+    gap:4px;
+  }
+
+  .nav-links a {
+    white-space:nowrap;
+    padding:9px 10px;
+    font-size:10px;
+    gap:6px;
+  }
+
+  .nav-links a i {font-size:11px}
+
+  .main {padding:13px 10px}
+
+  .topbar {margin-bottom:12px}
+
+  .chat-workspace {
+    height:calc(100dvh - 112px);
+    min-height:450px;
+    max-height:none;
+    grid-template-columns:1fr;
+    position:relative;
+  }
+
+  .contact-panel {
+    position:absolute;
+    inset:0;
+    z-index:2;
+    transition:transform .25s ease;
+  }
+
+  .conversation-panel {
+    position:absolute;
+    inset:0;
+    z-index:1;
+  }
+
+  .chat-workspace.chat-open .contact-panel {
+    transform:translateX(-100%);
+  }
+
+  .chat-workspace.chat-open .conversation-panel {
+    z-index:3;
+  }
+
+  .back-to-contacts {display:grid;place-items:center}
+
+  .contact-heading {padding:17px 17px 13px}
+
+  .contact-heading h1 {font-size:21px}
+
+  .messages-area {padding:18px 12px}
+
+  .message-row {max-width:88%}
+
+  .chat-header {padding:12px}
+
+  .composer {padding:11px 10px}
+
+  .composer-note {font-size:8px}
+}
+
+@media(max-width:360px) {
+  .nav-links a {padding:8px}
+  .nav-links a i {display:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="logo-space">
+      <!-- INSERT YOUR TAPCHAT LOGO HERE -->
+      <span>LOGO SPACE</span>
+    </div>
+
+    <div class="nav-label">TAPCHAT MENU</div>
+
+    <nav class="nav-links">
+
+      <a href="discover-users.html">
+        <i class="fa-solid fa-compass"></i> Discover
+      </a>
+
+      <a href="friend-requests.html">
+        <i class="fa-solid fa-user-plus"></i> Requests
+      </a>
+
+      <a href="my-friends.html">
+        <i class="fa-solid fa-user-group"></i> My Friends
+      </a>
+
+      <a href="private-chat.html" class="active">
+        <i class="fa-regular fa-comments"></i> Messages
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+      <nav class="nav-links">
+        <a href="profile.html">
+          <i class="fa-regular fa-user"></i> My Profile
+        </a>
+      </nav>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="breadcrumb">
+        TapChat / <strong>Private Messages</strong>
+      </div>
+
+      <div class="account">
+        <span id="accountName">My Account</span>
+        <div class="account-avatar">
+          <i class="fa-regular fa-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="chat-workspace" id="chatWorkspace">
+
+      <!-- CONTACTS -->
+
+      <aside class="contact-panel">
+
+        <div class="contact-heading">
+          <h1>Messages</h1>
+          <p>Your private conversations, all in one place.</p>
+        </div>
+
+        <div class="contact-search">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="search"
+              id="contactSearch"
+              placeholder="Search your friends..."
+            >
+          </div>
+        </div>
+
+        <div class="contact-label">YOUR FRIENDS</div>
+
+        <div class="contact-list" id="contactList">
+
+          <div class="loading">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Loading contacts...
+          </div>
+
+        </div>
+
+      </aside>
+
+      <!-- CONVERSATION -->
+
+      <section class="conversation-panel">
+
+        <header class="chat-header">
+
+          <button class="back-to-contacts" id="backButton"
+            type="button" aria-label="Back to contacts">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+
+          <div class="avatar" id="headerAvatar">
+            <i class="fa-regular fa-user"></i>
+          </div>
+
+          <div class="chat-person">
+            <strong id="chatName">Private Chat</strong>
+            <span id="chatStatus">Select a friend to begin</span>
+          </div>
+
+          <div class="header-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+
+        </header>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="messages-area" id="messagesArea">
+
+          <div class="chat-empty">
+            <div class="chat-empty-icon">
+              <i class="fa-regular fa-comments"></i>
+            </div>
+
+            <h2>Your conversations</h2>
+
+            <p>
+              Select a friend from your list to open a private
+              conversation. Your messages will appear here.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="composer">
+
+          <form class="composer-form" id="messageForm">
+
+            <textarea
+              id="messageInput"
+              placeholder="Write a message..."
+              rows="1"
+              maxlength="5000"
+              disabled
+            ></textarea>
+
+            <button
+              type="submit"
+              class="send-button"
+              id="sendButton"
+              disabled
+              aria-label="Send message"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+
+          </form>
+
+          <div class="composer-note">
+            Private conversations between confirmed friends.
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script type="module">
+
+/*
+=====================================================
+TAPCHAT PRIVATE CHAT - FIREBASE INTEGRATION
+=====================================================
+
+Firestore structure:
+
+users/{uid}
+
+friendships/{friendshipId}
+  participants: [uid1, uid2]
+
+conversations/{conversationId}
+  participants: [uid1, uid2]
+  createdAt
+  updatedAt
+  lastMessage
+  lastMessageAt
+
+conversations/{conversationId}/messages/{messageId}
+  senderId
+  text
+  type: "text"
+  createdAt
+
+Conversation ID:
+sorted uid1 + "__" + sorted uid2
+
+This must match the My Friends page.
+*/
+
+/* 1. FIREBASE IMPORTS */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
+  limit,
+  setDoc,
+  serverTimestamp,
+  writeBatch
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+/* 2. FIREBASE CONFIGURATION */
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+/* 3. INITIALIZE FIREBASE */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* 4. PAGE VARIABLES */
+
+let currentUser = null;
+let friends = [];
+let selectedFriend = null;
+let activeConversationId = null;
+
+let unsubscribeFriends = null;
+let unsubscribeMessages = null;
+
+let sending = false;
+
+const workspace = document.getElementById("chatWorkspace");
+const contactList = document.getElementById("contactList");
+const messagesArea = document.getElementById("messagesArea");
+const messageInput = document.getElementById("messageInput");
+const messageForm = document.getElementById("messageForm");
+const sendButton = document.getElementById("sendButton");
+const statusBox = document.getElementById("statusMessage");
+
+/* 5. HELPERS */
+
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function getInitials(name = "") {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+
+  return parts.slice(0,2)
+    .map(part => part[0])
+    .join("")
+    .toUpperCase() || "?";
+}
+
+function friendshipId(uid1, uid2) {
+  return [uid1, uid2].sort().join("__");
+}
+
+function conversationId(uid1, uid2) {
+  return [uid1, uid2].sort().join("__");
+}
+
+function showMessage(message, type = "error") {
+  statusBox.textContent = message;
+  statusBox.className = "status-message " + type;
+}
+
+function clearMessage() {
+  statusBox.textContent = "";
+  statusBox.className = "status-message";
+}
+
+function formatTime(timestamp) {
+  if (!timestamp || typeof timestamp.toDate !== "function") {
+    return "";
+  }
+
+  return timestamp.toDate().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function formatDay(timestamp) {
+  if (!timestamp || typeof timestamp.toDate !== "function") {
+    return "Today";
+  }
+
+  const date = timestamp.toDate();
+  const today = new Date();
+
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  }
+
+  return date.toLocaleDateString([], {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+async function getUserDetails(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+
+  if (!snap.exists()) {
+    return {
+      uid,
+      fullName: "Unavailable User",
+      username: "",
+      photoURL: ""
+    };
+  }
+
+  return {
+    uid,
+    ...snap.data()
+  };
+}
+
+function stopListeners() {
+
+  if (unsubscribeFriends) {
+    unsubscribeFriends();
+    unsubscribeFriends = null;
+  }
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+    unsubscribeMessages = null;
+  }
+
+}
+
+function setComposerEnabled(enabled) {
+  messageInput.disabled = !enabled;
+  sendButton.disabled = !enabled;
+}
+
+/* 6. AUTHENTICATION */
+
+onAuthStateChanged(auth, async user => {
+
+  stopListeners();
+
+  currentUser = user;
+  friends = [];
+  selectedFriend = null;
+  activeConversationId = null;
+
+  setComposerEnabled(false);
+
+  if (!user) {
+
+    contactList.innerHTML = `
+      <div class="contact-empty">
+        <i class="fa-solid fa-lock"></i><br><br>
+        Please sign in to access your conversations.
+      </div>
+    `;
+
+    messagesArea.innerHTML = `
+      <div class="chat-empty">
+        <div class="chat-empty-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2>Sign in required</h2>
+        <p>Sign in to use private messaging.</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  try {
+
+    const profile = await getUserDetails(user.uid);
+
+    document.getElementById("accountName").textContent =
+      profile.fullName || profile.username || "My Account";
+
+    startFriendsListener(user.uid);
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage("Unable to load your account.");
+
+  }
+
+});
+
+/* 7. LOAD CONFIRMED FRIENDS */
+
+function startFriendsListener(uid) {
+
+  const friendsQuery = query(
+    collection(db, "friendships"),
+    where("participants", "array-contains", uid)
+  );
+
+  unsubscribeFriends = onSnapshot(
+    friendsQuery,
+
+    async snapshot => {
+
+      try {
+
+        const results = await Promise.all(
+          snapshot.docs.map(async friendshipDoc => {
+
+            const data = friendshipDoc.data();
+
+            const friendId = (data.participants || [])
+              .find(id => id !== uid);
+
+            if (!friendId) return null;
+
+            const person = await getUserDetails(friendId);
+
+            return {
+              friendshipId: friendshipDoc.id,
+              friendId,
+              person
+            };
+
+          })
+        );
+
+        friends = results.filter(Boolean);
+
+        renderContacts();
+
+        const requestedFriendId =
+          new URLSearchParams(window.location.search)
+            .get("friendId");
+
+        if (requestedFriendId && !selectedFriend) {
+
+          const requestedFriend = friends.find(
+            friend => friend.friendId === requestedFriendId
+          );
+
+          if (requestedFriend) {
+            await openConversation(requestedFriend);
+          } else {
+            showMessage(
+              "This person is not in your confirmed friends list."
+            );
+          }
+
+        } else if (
+          selectedFriend &&
+          !friends.some(
+            friend => friend.friendId === selectedFriend.friendId
+          )
+        ) {
+
+          closeConversation();
+
+          showMessage(
+            "This friendship is no longer active."
+          );
+
+        } else if (selectedFriend) {
+
+          const updatedFriend = friends.find(
+            friend => friend.friendId === selectedFriend.friendId
+          );
+
+          if (updatedFriend) {
+            selectedFriend = updatedFriend;
+          }
+
+        }
+
+      } catch (error) {
+
+        console.error("Contact loading error:", error);
+
+        showMessage("Unable to load your friends.");
+
+      }
+
+    },
+
+    error => {
+
+      console.error(error);
+
+      showMessage(
+        "Could not access your friends. Check Firestore security rules."
+      );
+
+    }
+
+  );
+
+}
+
+/* 8. DISPLAY CONTACTS */
+
+function renderContacts() {
+
+  const search = document.getElementById("contactSearch")
+    .value.trim().toLowerCase();
+
+  const filtered = friends.filter(friend => {
+
+    const name = (
+      friend.person.fullName || ""
+    ).toLowerCase();
+
+    const username = (
+      friend.person.username || ""
+    ).toLowerCase();
+
+    return name.includes(search) ||
+      username.includes(search);
+
+  });
+
+  if (!filtered.length) {
+
+    contactList.innerHTML = `
+      <div class="contact-empty">
+        ${search
+          ? "No matching friends found."
+          : "You don't have any confirmed friends yet. Add friends to start chatting."}
+      </div>
+    `;
+
+    return;
+  }
+
+  contactList.innerHTML = filtered.map(friend => {
+
+    const name = friend.person.fullName || "Unknown User";
+
+    const avatar = friend.person.photoURL
+      ? `<img src="${escapeHTML(friend.person.photoURL)}" alt="">`
+      : escapeHTML(getInitials(name));
+
+    const active =
+      selectedFriend?.friendId === friend.friendId;
+
+    return `
+      <button
+        type="button"
+        class="contact-item ${active ? "active" : ""}"
+        data-friend-id="${escapeHTML(friend.friendId)}"
+      >
+
+        <div class="avatar">${avatar}</div>
+
+        <div class="contact-info">
+          <strong>${escapeHTML(name)}</strong>
+          <span>
+            ${escapeHTML(
+              friend.person.username
+                ? "@" + friend.person.username.replace(/^@/, "")
+                : "TapChat friend"
+            )}
+          </span>
+        </div>
+
+      </button>
+    `;
+
+  }).join("");
+
+}
+
+/* 9. CONTACT SEARCH */
+
+document.getElementById("contactSearch")
+  .addEventListener("input", renderContacts);
+
+/* 10. SELECT FRIEND */
+
+contactList.addEventListener("click", async event => {
+
+  const button = event.target.closest("[data-friend-id]");
+
+  if (!button) return;
+
+  const friend = friends.find(
+    item => item.friendId === button.dataset.friendId
+  );
+
+  if (friend) {
+    await openConversation(friend);
+  }
+
+});
+
+/* 11. OPEN CONVERSATION */
+
+async function openConversation(friend) {
+
+  if (!currentUser || !friend) return;
+
+  clearMessage();
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+    unsubscribeMessages = null;
+  }
+
+  selectedFriend = friend;
+
+  activeConversationId = conversationId(
+    currentUser.uid,
+    friend.friendId
+  );
+
+  renderContacts();
+
+  const name = friend.person.fullName || "Friend";
+
+  document.getElementById("chatName").textContent = name;
+
+  document.getElementById("chatStatus").textContent =
+    "Confirmed TapChat friend";
+
+  document.getElementById("chatStatus")
+    .className = "connection-label";
+
+  const avatar = document.getElementById("headerAvatar");
+
+  avatar.innerHTML = friend.person.photoURL
+    ? `<img src="${escapeHTML(friend.person.photoURL)}" alt="">`
+    : escapeHTML(getInitials(name));
+
+  messagesArea.innerHTML = `
+    <div class="loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Opening conversation...
+    </div>
+  `;
+
+  workspace.classList.add("chat-open");
+
+  setComposerEnabled(false);
+
+  try {
+
+    /*
+      Verify that the friendship document exists
+      before allowing the conversation to open.
+    */
+
+    const friendshipRef = doc(
+      db,
+      "friendships",
+      friendshipId(currentUser.uid, friend.friendId)
+    );
+
+    const friendshipSnap = await getDoc(friendshipRef);
+
+    if (!friendshipSnap.exists()) {
+      throw new Error("This friendship is no longer active.");
+    }
+
+    const participants =
+      friendshipSnap.data().participants || [];
+
+    if (
+      !participants.includes(currentUser.uid) ||
+      !participants.includes(friend.friendId)
+    ) {
+      throw new Error("Friendship verification failed.");
+    }
+
+    const conversationRef = doc(
+      db,
+      "conversations",
+      activeConversationId
+    );
+
+    /*
+      Create the conversation if it does not exist.
+      Both users use the same deterministic ID.
+    */
+
+    await setDoc(
+      conversationRef,
+      {
+        participants: [
+          currentUser.uid,
+          friend.friendId
+        ].sort(),
+        createdAt: serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    setComposerEnabled(true);
+
+    loadMessages(activeConversationId);
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("friendId", friend.friendId);
+
+    history.replaceState({}, "", url);
+
+  } catch (error) {
+
+    console.error("Conversation error:", error);
+
+    messagesArea.innerHTML = `
+      <div class="chat-empty">
+        <div class="chat-empty-icon">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+        <h2>Unable to open chat</h2>
+        <p>${escapeHTML(error.message || "Please try again.")}</p>
+      </div>
+    `;
+
+    showMessage(
+      error.message || "Unable to open this conversation."
+    );
+
+    setComposerEnabled(false);
+
+  }
+
+}
+
+/* 12. LOAD MESSAGE HISTORY */
+
+function loadMessages(conversationIdValue) {
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+  }
+
+  const messagesQuery = query(
+    collection(
+      db,
+      "conversations",
+      conversationIdValue,
+      "messages"
+    ),
+    orderBy("createdAt", "asc"),
+    limit(100)
+  );
+
+  unsubscribeMessages = onSnapshot(
+    messagesQuery,
+
+    snapshot => {
+
+      const messages = snapshot.docs.map(messageDoc => ({
+        id: messageDoc.id,
+        ...messageDoc.data()
+      }));
+
+      renderMessages(messages);
+
+    },
+
+    error => {
+
+      console.error("Message listener error:", error);
+
+      showMessage(
+        "Unable to load messages. Check Firestore permissions and indexes."
+      );
+
+    }
+
+  );
+
+}
+
+/* 13. RENDER MESSAGES */
+
+function renderMessages(messages) {
+
+  if (!messages.length) {
+
+    messagesArea.innerHTML = `
+      <div class="chat-empty">
+        <div class="chat-empty-icon">
+          <i class="fa-regular fa-paper-plane"></i>
+        </div>
+
+        <h2>Start the conversation</h2>
+
+        <p>
+          You are now connected. Send your first message
+          and start chatting privately.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  let previousDay = "";
+
+  messagesArea.innerHTML = messages.map(message => {
+
+    const mine =
+      message.senderId === currentUser.uid;
+
+    const day = formatDay(message.createdAt);
+
+    let divider = "";
+
+    if (day !== previousDay) {
+
+      divider = `
+        <div class="day-divider">
+          <span>${escapeHTML(day)}</span>
+        </div>
+      `;
+
+      previousDay = day;
+
+    }
+
+    const avatar = mine
+      ? null
+      : selectedFriend?.person?.photoURL
+        ? `<img src="${escapeHTML(selectedFriend.person.photoURL)}" alt="">`
+        : escapeHTML(
+            getInitials(selectedFriend?.person?.fullName || "")
+          );
+
+    const statusIcon = mine
+      ? '<i class="fa-solid fa-check pending-icon"></i>'
+      : "";
+
+    return `
+
+      ${divider}
+
+      <div class="message-row ${mine ? "mine" : ""}">
+
+        ${!mine ? `
+          <div class="message-avatar">${avatar}</div>
+        ` : ""}
+
+        <div class="message-content">
+
+          <div class="message-bubble">${escapeHTML(message.text || "")}</div>
+
+          <div class="message-meta">
+            ${formatTime(message.createdAt)}
+            ${statusIcon}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+  messagesArea.scrollTop = messagesArea.scrollHeight;
+
+}
+
+/* 14. AUTO-RESIZE MESSAGE INPUT */
+
+messageInput.addEventListener("input", () => {
+
+  messageInput.style.height = "auto";
+
+  messageInput.style.height =
+    Math.min(messageInput.scrollHeight, 120) + "px";
+
+});
+
+/* 15. SEND MESSAGE */
+
+messageForm.addEventListener("submit", async event => {
+
+  event.preventDefault();
+
+  if (
+    !currentUser ||
+    !selectedFriend ||
+    !activeConversationId ||
+    sending
+  ) return;
+
+  const text = messageInput.value.trim();
+
+  if (!text) return;
+
+  if (text.length > 5000) {
+    showMessage("Your message is too long.");
+    return;
+  }
+
+  sending = true;
+  sendButton.disabled = true;
+
+  const conversationRef = doc(
+    db,
+    "conversations",
+    activeConversationId
+  );
+
+  const messageRef = doc(
+    collection(
+      db,
+      "conversations",
+      activeConversationId,
+      "messages"
+    )
+  );
+
+  try {
+
+    /*
+      The message and conversation preview
+      are written together in one batch.
+    */
+
+    const batch = writeBatch(db);
+
+    batch.set(messageRef, {
+      senderId: currentUser.uid,
+      text,
+      type: "text",
+      createdAt: serverTimestamp()
+    });
+
+    batch.update(conversationRef, {
+      lastMessage: text,
+      lastMessageAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+
+    await batch.commit();
+
+    messageInput.value = "";
+    messageInput.style.height = "auto";
+
+    clearMessage();
+
+    messageInput.focus();
+
+  } catch (error) {
+
+    console.error("Send message error:", error);
+
+    showMessage(
+      "Message could not be sent. Check your internet connection and Firebase permissions."
+    );
+
+  } finally {
+
+    sending = false;
+    sendButton.disabled = !selectedFriend;
+
+  }
+
+});
+
+/* 16. ENTER TO SEND, SHIFT+ENTER FOR NEW LINE */
+
+messageInput.addEventListener("keydown", event => {
+
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey &&
+    !event.isComposing
+  ) {
+
+    event.preventDefault();
+
+    messageForm.requestSubmit();
+
+  }
+
+});
+
+/* 17. CLOSE CONVERSATION ON MOBILE */
+
+function closeConversation() {
+
+  selectedFriend = null;
+  activeConversationId = null;
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+    unsubscribeMessages = null;
+  }
+
+  workspace.classList.remove("chat-open");
+
+  setComposerEnabled(false);
+
+  document.getElementById("chatName").textContent =
+    "Private Chat";
+
+  document.getElementById("chatStatus").textContent =
+    "Select a friend to begin";
+
+  document.getElementById("chatStatus").className = "";
+
+  document.getElementById("headerAvatar").innerHTML =
+    '<i class="fa-regular fa-user"></i>';
+
+  messagesArea.innerHTML = `
+    <div class="chat-empty">
+      <div class="chat-empty-icon">
+        <i class="fa-regular fa-comments"></i>
+      </div>
+      <h2>Your conversations</h2>
+      <p>Select a friend to open a private conversation.</p>
+    </div>
+  `;
+
+  const url = new URL(window.location.href);
+
+  url.searchParams.delete("friendId");
+
+  history.replaceState({}, "", url);
+
+  renderContacts();
+
+}
+
+document.getElementById("backButton")
+  .addEventListener("click", closeConversation);
+
+/* 18. CLEANUP */
+
+window.addEventListener("beforeunload", stopListeners);
+
+</script>
+
+</body>
+</html>
