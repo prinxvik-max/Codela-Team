@@ -1,11 +1,32 @@
+:root {
+  --surface: #ffffff;
+  --brand: #593722;
+  --muted: #7a655d;
+  --line: rgba(255, 255, 255, 0.32);
+  --shadow: rgba(33, 18, 14, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-width: 320px;
+}
+
 body {
   min-height: 100vh;
-  height: auto;
+  min-height: 100svh;
   padding: 32px 20px;
   overflow-y: auto;
   background: #593722;
-  background-size: 240px 240px, 150px 150px, 100px 100px;
-  background-position: left 5% top 8%, right 7% top 16%, right 17% bottom 10%;
+  color: #261b17;
+  font-family: "Saira", Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .contact-container {
@@ -31,10 +52,12 @@ body {
 }
 
 .school-name {
-  margin-bottom: auto;
+  margin: 0 0 38px;
   color: var(--brand);
   font-size: 13px;
   font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
@@ -69,8 +92,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-top: auto;
-  padding-top: 40px;
+  margin-top: 40px;
   color: var(--brand);
   font-size: 13px;
   font-weight: 700;
@@ -100,7 +122,13 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 38px;
+  color: white;
   padding: 64px clamp(28px, 6vw, 72px);
+  background: var(--brand);
+}
+
+.contact-details .detail-label {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .detail-block {
@@ -109,7 +137,7 @@ body {
 }
 
 .detail-value {
-  color: var(--text);
+  color: white;
   font-size: 20px;
   font-weight: 600;
   text-decoration: none;
@@ -129,7 +157,7 @@ body {
 }
 
 .detail-note {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 12px;
 }
 
@@ -152,7 +180,7 @@ body {
   justify-content: center;
   border: 1px solid var(--line);
   border-radius: 50%;
-  color: var(--brand);
+  color: white;
   transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
@@ -160,7 +188,7 @@ body {
   transform: translateY(-2px);
   border-color: var(--brand);
   background: var(--brand);
-  color: #fff;
+  color: black;
 }
 
 .social-links svg {
@@ -203,27 +231,67 @@ body {
 }
 
 @media (max-width: 680px) {
+  body {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
   .contact-container {
+    width: 100%;
     min-height: 0;
     grid-template-columns: 1fr;
+    border-radius: 20px;
   }
 
   .contact-intro {
-    min-height: 310px;
-    padding: 32px 28px;
+    min-height: 280px;
+    padding: 28px 24px;
+  }
+
+  .school-name {
+    margin-bottom: 32px;
   }
 
   .contact-intro h1 {
-    font-size: 2.8rem;
+    font-size: clamp(2.4rem, 13vw, 2.8rem);
+  }
+
+  .intro-copy {
+    max-width: 100%;
   }
 
   .home-link {
-    padding-top: 28px;
+    margin-top: 28px;
   }
 
   .contact-details {
     gap: 30px;
-    padding: 38px 28px 42px;
+    padding: 36px 24px 40px;
+  }
+
+  .detail-value {
+    font-size: clamp(17px, 5vw, 20px);
+  }
+}
+
+@media (max-width: 380px) {
+  body {
+    padding: 10px;
+  }
+
+  .contact-intro,
+  .contact-details {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .social-links {
+    gap: 8px;
+  }
+
+  .social-links a {
+    width: 42px;
+    height: 42px;
   }
 }
 
