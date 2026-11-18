@@ -1,0 +1,1234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#302319">
+<title>Friend Requests | TapChat</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root {
+  --dark: #302319;
+  --dark2: #493629;
+  --brown: #79563D;
+  --accent: #B17C51;
+  --cream: #F8F3EB;
+  --surface: #FFFDF9;
+  --soft: #EDE3D6;
+  --muted: #968779;
+  --text: #35281F;
+  --green: #367B58;
+  --red: #B34D43;
+  --shadow: 0 12px 35px rgba(48,35,25,.07);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background: var(--dark);
+  color: #fff;
+  padding: 30px 19px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.logo-space {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  margin-bottom: 36px;
+}
+
+.logo-space span {
+  font-size: 10px;
+  color: #BDA58F;
+  letter-spacing: 2px;
+}
+
+.nav-label {
+  color: #A99788;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  padding: 0 12px;
+  margin-bottom: 13px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #D3C5B8;
+  padding: 14px 13px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.nav-links a i {
+  width: 19px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: #55402F;
+  color: #F2D8B9;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid #554435;
+  padding-top: 20px;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 34px 48px 50px;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 37px;
+}
+
+.breadcrumb {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.breadcrumb strong { color: var(--dark); }
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--brown);
+  font-weight: 700;
+}
+
+.account-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: var(--soft);
+  display: grid;
+  place-items: center;
+  color: var(--brown);
+}
+
+.heading {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 9px;
+}
+
+.heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 38px);
+  color: var(--dark);
+  margin-bottom: 9px;
+}
+
+.heading p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 29px;
+}
+
+.summary-card {
+  background: var(--surface);
+  border: 1px solid #EDE4D9;
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow);
+}
+
+.summary-icon {
+  width: 47px;
+  height: 47px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.incoming-icon {
+  color: var(--brown);
+  background: #F0E4D5;
+}
+
+.outgoing-icon {
+  color: #8C694A;
+  background: #F5EDE2;
+}
+
+.summary-info small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.summary-info strong {
+  display: block;
+  font-size: 25px;
+  color: var(--dark);
+  margin-top: 3px;
+}
+
+.content-card {
+  background: var(--surface);
+  border: 1px solid #EDE4D9;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.tabs-header {
+  padding: 20px 23px;
+  border-bottom: 1px solid #EEE7DE;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: flex;
+  gap: 25px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 0;
+  font-weight: 700;
+  font-size: 12px;
+  position: relative;
+}
+
+.tab.active { color: var(--dark); }
+
+.tab.active::after {
+  content: "";
+  height: 3px;
+  background: var(--accent);
+  border-radius: 5px;
+  position: absolute;
+  bottom: -21px;
+  left: 0;
+  right: 0;
+}
+
+.tab-count {
+  background: #F0E5D8;
+  color: var(--brown);
+  border-radius: 20px;
+  padding: 3px 7px;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.search {
+  width: min(230px, 100%);
+  position: relative;
+}
+
+.search i {
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.search input {
+  width: 100%;
+  border: 1px solid #E8DED2;
+  background: #FBF8F3;
+  border-radius: 9px;
+  outline: none;
+  padding: 10px 12px 10px 35px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.search input:focus { border-color: var(--accent); }
+
+.section-title {
+  padding: 22px 24px 12px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.request-list {
+  padding: 0 23px 20px;
+}
+
+.request-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 0;
+  border-bottom: 1px solid #F0EAE2;
+}
+
+.request-item:last-child { border-bottom: none; }
+
+.avatar {
+  width: 51px;
+  height: 51px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #E9D9C6;
+  color: var(--brown);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person {
+  flex: 1;
+  min-width: 0;
+}
+
+.person strong {
+  display: block;
+  font-size: 13px;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.person span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.person time {
+  display: block;
+  font-size: 10px;
+  color: #A89B8E;
+  margin-top: 6px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.btn-accept {
+  background: var(--dark);
+  color: #fff;
+}
+
+.btn-accept:hover:not(:disabled) { background: var(--brown); }
+
+.btn-decline {
+  background: #F3E9E0;
+  color: var(--red);
+}
+
+.btn-decline:hover:not(:disabled) { background: #F0DDD5; }
+
+.btn-cancel {
+  background: #F3E9E0;
+  color: var(--brown);
+}
+
+.btn-cancel:hover:not(:disabled) { background: #EBDAC8; }
+
+.pending {
+  background: #F4EADB;
+  color: #987143;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 65px 20px;
+}
+
+.empty-icon {
+  width: 67px;
+  height: 67px;
+  border-radius: 22px;
+  background: #F3E9DC;
+  color: var(--brown);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 17px;
+  font-size: 23px;
+}
+
+.empty-state h3 {
+  color: var(--dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.status-message {
+  margin: 15px 23px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 11px;
+  display: none;
+  line-height: 1.6;
+}
+
+.status-message.error {
+  display: block;
+  background: #FBEAE7;
+  color: #A33F35;
+}
+
+.status-message.success {
+  display: block;
+  background: #E8F2EA;
+  color: #367B58;
+}
+
+.loading {
+  text-align: center;
+  padding: 45px 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.loading i { margin-right: 7px; }
+
+.footer-note {
+  text-align: center;
+  color: #AA9D90;
+  font-size: 10px;
+  padding: 24px 0 0;
+}
+
+@media(max-width: 850px) {
+  .sidebar { width: 205px; }
+  .main { padding: 28px 25px 40px; }
+}
+
+@media(max-width: 650px) {
+  .app { display: block; }
+  .sidebar {
+    width: 100%;
+    padding: 12px 13px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .logo-space {
+    height: 26px;
+    margin: 0 0 12px;
+    padding-left: 5px;
+  }
+  .nav-label, .sidebar-bottom { display: none; }
+  .nav-links {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 5px;
+    scrollbar-width: none;
+  }
+  .nav-links a {
+    white-space: nowrap;
+    padding: 10px 11px;
+    font-size: 10px;
+    gap: 7px;
+  }
+  .nav-links a i { font-size: 12px; }
+  .main { padding: 22px 14px 35px; }
+  .topbar { margin-bottom: 28px; }
+  .summary { gap: 10px; }
+  .summary-card { padding: 13px 11px; gap: 9px; }
+  .summary-icon { width: 37px; height: 37px; font-size: 15px; }
+  .summary-info strong { font-size: 21px; }
+  .summary-info small { font-size: 9px; }
+  .tabs-header { padding: 16px; }
+  .tabs { gap: 17px; }
+  .tab { font-size: 10px; }
+  .tab.active::after { bottom: -17px; }
+  .search { width: 100%; }
+  .request-list { padding: 0 14px 15px; }
+  .section-title { padding: 19px 15px 10px; }
+  .request-item { gap: 10px; align-items: flex-start; }
+  .avatar { width: 42px; height: 42px; font-size: 14px; }
+  .person strong { font-size: 11px; }
+  .person span { font-size: 10px; }
+  .actions { flex-direction: column; align-items: stretch; }
+  .btn { padding: 9px 10px; font-size: 10px; }
+  .pending { text-align: center; padding: 9px 8px; }
+}
+
+@media(max-width: 360px) {
+  .nav-links a { padding: 9px 8px; }
+  .nav-links a i { display: none; }
+  .request-item { gap: 8px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo-space">
+      <!-- INSERT YOUR TAPCHAT LOGO HERE -->
+      <span>LOGO SPACE</span>
+    </div>
+
+    <div class="nav-label">TAPCHAT MENU</div>
+
+    <nav class="nav-links">
+      <a href="discover-users.html">
+        <i class="fa-solid fa-compass"></i> Discover
+      </a>
+
+      <a href="friend-requests.html" class="active">
+        <i class="fa-solid fa-user-plus"></i> Requests
+      </a>
+
+      <a href="my-friends.html">
+        <i class="fa-solid fa-user-group"></i> My Friends
+      </a>
+
+      <a href="private-chat.html">
+        <i class="fa-regular fa-comments"></i> Messages
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <nav class="nav-links">
+        <a href="profile.html">
+          <i class="fa-regular fa-user"></i> My Profile
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="breadcrumb">TapChat / <strong>Friend Requests</strong></div>
+      <div class="account">
+        <span id="accountName">My Account</span>
+        <div class="account-avatar">
+          <i class="fa-regular fa-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="heading">
+      <div class="eyebrow">YOUR CONNECTIONS</div>
+      <h1>Friend Requests</h1>
+      <p>Manage your connections and decide who gets to join your circle.</p>
+    </section>
+
+    <section class="summary">
+
+      <div class="summary-card">
+        <div class="summary-icon incoming-icon">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <div class="summary-info">
+          <small>Incoming Requests</small>
+          <strong id="incomingCount">0</strong>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon outgoing-icon">
+          <i class="fa-regular fa-paper-plane"></i>
+        </div>
+        <div class="summary-info">
+          <small>Sent Requests</small>
+          <strong id="outgoingCount">0</strong>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="content-card">
+
+      <div class="tabs-header">
+
+        <div class="tabs">
+          <button class="tab active" id="incomingTab" type="button">
+            Received <span class="tab-count" id="incomingTabCount">0</span>
+          </button>
+
+          <button class="tab" id="outgoingTab" type="button">
+            Sent <span class="tab-count" id="outgoingTabCount">0</span>
+          </button>
+        </div>
+
+        <div class="search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" id="searchInput"
+                 placeholder="Search requests...">
+        </div>
+
+      </div>
+
+      <div id="statusMessage" class="status-message"></div>
+
+      <div id="requestContent">
+        <div class="loading">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          Preparing your requests...
+        </div>
+      </div>
+
+    </section>
+
+    <div class="footer-note">
+      Your connections. Your circle. Your TapChat.
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+/*
+=====================================================
+TAPCHAT FRIEND REQUESTS - FIREBASE INTEGRATION
+=====================================================
+
+Firestore collections:
+
+users/{uid}
+
+friendRequests/{requestId}
+  senderId
+  receiverId
+  status: pending | accepted | declined | cancelled
+  createdAt
+
+friendships/{friendshipId}
+  participants: [uid1, uid2]
+  requestId
+  createdAt
+
+IMPORTANT:
+Insert your actual Firebase configuration below.
+This page uses Firebase modular SDK 12.4.0.
+*/
+
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+  writeBatch,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+
+/* 1. FIREBASE CONFIGURATION */
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+
+/* 2. INITIALIZE FIREBASE */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* 3. PAGE STATE */
+
+let currentUser = null;
+let incomingRequests = [];
+let outgoingRequests = [];
+let activeTab = "incoming";
+let unsubscribeIncoming = null;
+let unsubscribeOutgoing = null;
+let busyRequests = new Set();
+
+const content = document.getElementById("requestContent");
+const statusBox = document.getElementById("statusMessage");
+const searchInput = document.getElementById("searchInput");
+
+
+/* 4. HELPERS */
+
+function showMessage(message, type = "success") {
+  statusBox.textContent = message;
+  statusBox.className = "status-message " + type;
+}
+
+function clearMessage() {
+  statusBox.textContent = "";
+  statusBox.className = "status-message";
+}
+
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function getInitials(name = "") {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0, 2).map(part => part[0]).join("").toUpperCase() || "?";
+}
+
+function formatDate(timestamp) {
+  if (!timestamp || typeof timestamp.toDate !== "function") {
+    return "Recently";
+  }
+
+  return timestamp.toDate().toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function getFriendshipId(uid1, uid2) {
+  return [uid1, uid2].sort().join("__");
+}
+
+async function getUserDetails(uid) {
+  const userSnap = await getDoc(doc(db, "users", uid));
+
+  if (!userSnap.exists()) {
+    return {
+      uid,
+      fullName: "Unavailable User",
+      username: "",
+      photoURL: ""
+    };
+  }
+
+  return {
+    uid,
+    ...userSnap.data()
+  };
+}
+
+function stopListeners() {
+  if (unsubscribeIncoming) unsubscribeIncoming();
+  if (unsubscribeOutgoing) unsubscribeOutgoing();
+
+  unsubscribeIncoming = null;
+  unsubscribeOutgoing = null;
+}
+
+
+/* 5. AUTHENTICATION */
+
+onAuthStateChanged(auth, async user => {
+  stopListeners();
+
+  currentUser = user;
+
+  if (!user) {
+    content.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3>Sign in required</h3>
+        <p>Please sign in to view and manage your friend requests.</p>
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    const myProfile = await getUserDetails(user.uid);
+
+    document.getElementById("accountName").textContent =
+      myProfile.fullName || myProfile.username || "My Account";
+
+    startRequestListeners(user.uid);
+
+  } catch (error) {
+    console.error("Profile loading error:", error);
+    showMessage("Unable to load your account information.", "error");
+  }
+});
+
+
+/* 6. REAL-TIME FIRESTORE LISTENERS */
+
+function startRequestListeners(uid) {
+
+  const incomingQuery = query(
+    collection(db, "friendRequests"),
+    where("receiverId", "==", uid),
+    where("status", "==", "pending")
+  );
+
+  const outgoingQuery = query(
+    collection(db, "friendRequests"),
+    where("senderId", "==", uid),
+    where("status", "==", "pending")
+  );
+
+  unsubscribeIncoming = onSnapshot(
+    incomingQuery,
+    async snapshot => {
+      try {
+        incomingRequests = await Promise.all(
+          snapshot.docs.map(async requestDoc => {
+            const request = requestDoc.data();
+            const person = await getUserDetails(request.senderId);
+
+            return {
+              id: requestDoc.id,
+              ...request,
+              person
+            };
+          })
+        );
+
+        updateCounts();
+        renderRequests();
+      } catch (error) {
+        console.error("Incoming requests error:", error);
+        showMessage("Could not load incoming requests.", "error");
+      }
+    },
+    error => {
+      console.error(error);
+      showMessage("Unable to access incoming requests. Check Firestore rules.", "error");
+    }
+  );
+
+  unsubscribeOutgoing = onSnapshot(
+    outgoingQuery,
+    async snapshot => {
+      try {
+        outgoingRequests = await Promise.all(
+          snapshot.docs.map(async requestDoc => {
+            const request = requestDoc.data();
+            const person = await getUserDetails(request.receiverId);
+
+            return {
+              id: requestDoc.id,
+              ...request,
+              person
+            };
+          })
+        );
+
+        updateCounts();
+        renderRequests();
+      } catch (error) {
+        console.error("Outgoing requests error:", error);
+        showMessage("Could not load sent requests.", "error");
+      }
+    },
+    error => {
+      console.error(error);
+      showMessage("Unable to access sent requests. Check Firestore rules.", "error");
+    }
+  );
+}
+
+
+/* 7. UPDATE COUNTS */
+
+function updateCounts() {
+  document.getElementById("incomingCount").textContent =
+    incomingRequests.length;
+
+  document.getElementById("outgoingCount").textContent =
+    outgoingRequests.length;
+
+  document.getElementById("incomingTabCount").textContent =
+    incomingRequests.length;
+
+  document.getElementById("outgoingTabCount").textContent =
+    outgoingRequests.length;
+}
+
+
+/* 8. TAB SWITCHING */
+
+function switchTab(tab) {
+  activeTab = tab;
+
+  document.getElementById("incomingTab")
+    .classList.toggle("active", tab === "incoming");
+
+  document.getElementById("outgoingTab")
+    .classList.toggle("active", tab === "outgoing");
+
+  searchInput.value = "";
+  clearMessage();
+  renderRequests();
+}
+
+document.getElementById("incomingTab").addEventListener("click", () => {
+  switchTab("incoming");
+});
+
+document.getElementById("outgoingTab").addEventListener("click", () => {
+  switchTab("outgoing");
+});
+
+searchInput.addEventListener("input", renderRequests);
+
+
+/* 9. RENDER REQUESTS */
+
+function renderRequests() {
+
+  const requests = activeTab === "incoming"
+    ? incomingRequests
+    : outgoingRequests;
+
+  const search = searchInput.value.trim().toLowerCase();
+
+  const filtered = requests.filter(item => {
+    const name = (item.person.fullName || "").toLowerCase();
+    const username = (item.person.username || "").toLowerCase();
+
+    return name.includes(search) || username.includes(search);
+  });
+
+  if (filtered.length === 0) {
+    const isIncoming = activeTab === "incoming";
+
+    content.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fa-solid ${search
+            ? "fa-magnifying-glass"
+            : isIncoming ? "fa-user-plus" : "fa-paper-plane"}"></i>
+        </div>
+
+        <h3>${search
+          ? "No matching requests"
+          : isIncoming ? "No new friend requests" : "No pending requests"}</h3>
+
+        <p>${search
+             ? "No matching requests"
+          : isIncoming ? "No new friend requests" : "No pending requests"}</h3>
+
+        <p>${search
+          ? "Try searching with a different name or username."
+          : isIncoming
+            ? "When someone sends you a friend request, it will appear here."
+            : "Requests you send to other users will appear here."}</p>
+      </div>
+    `;
+    return;
+  }
+
+  const title = activeTab === "incoming"
+    ? "PEOPLE WHO WANT TO CONNECT"
+    : "REQUESTS YOU HAVE SENT";
+
+  content.innerHTML = `
+    <div class="section-title">${title}</div>
+    <div class="request-list">
+      ${filtered.map(createRequestHTML).join("")}
+    </div>
+  `;
+}
+
+function createRequestHTML(item) {
+
+  const person = item.person || {};
+  const name = person.fullName || "Unknown User";
+  const username = person.username
+    ? "@" + person.username.replace(/^@/, "")
+    : "";
+
+  const avatar = person.photoURL
+    ? `<img src="${escapeHTML(person.photoURL)}" alt="">`
+    : escapeHTML(getInitials(name));
+
+  const isIncoming = activeTab === "incoming";
+  const busy = busyRequests.has(item.id);
+
+  return `
+    <article class="request-item">
+
+      <div class="avatar">${avatar}</div>
+
+      <div class="person">
+        <strong>${escapeHTML(name)}</strong>
+        <span>${escapeHTML(username)}</span>
+        <time>${formatDate(item.createdAt)}</time>
+      </div>
+
+      <div class="actions">
+        ${isIncoming
+          ? `
+            <button class="btn btn-accept"
+              data-action="accept"
+              data-id="${escapeHTML(item.id)}"
+              ${busy ? "disabled" : ""}>
+              ${busy ? "Please wait..." : "Accept"}
+            </button>
+            `
+          : `
+            <span class="pending">Pending</span>
+
+            <button class="btn btn-cancel"
+              data-action="cancel"
+              data-id="${escapeHTML(item.id)}"
+              ${busy ? "disabled" : ""}>
+              Cancel
+            </button>
+          `
+        }
+      </div>
+
+    </article>
+  `;
+}
+  /* 10. REQUEST ACTIONS */
+
+content.addEventListener("click", async event => {
+
+  const button = event.target.closest("button[data-action]");
+
+  if (!button || !currentUser) return;
+
+  const action = button.dataset.action;
+  const requestId = button.dataset.id;
+
+  if (busyRequests.has(requestId)) return;
+
+  busyRequests.add(requestId);
+  renderRequests();
+
+  try {
+
+    const requestRef = doc(db, "friendRequests", requestId);
+    const requestSnap = await getDoc(requestRef);
+
+    if (!requestSnap.exists()) {
+      throw new Error("This friend request no longer exists.");
+    }
+    const request = requestSnap.data();
+
+    if (request.status !== "pending") {
+      throw new Error("This request is no longer pending.");
+    }
+
+    if (
+      action === "accept" &&
+      request.receiverId !== currentUser.uid
+    ) {
+      throw new Error("You cannot accept this request.");
+    }
+
+    if (
+      action === "decline" &&
+      request.receiverId !== currentUser.uid
+    ) {
+      throw new Error("You cannot decline this request.");
+    }
+
+    if (
+      action === "cancel" &&
+      request.senderId !== currentUser.uid
+    ) {
+      throw new Error("You cannot cancel this request.");
+    }
+    
+    if (action === "accept") {
+
+      const friendshipId = getFriendshipId(
+        request.senderId,
+        request.receiverId
+      );
+
+      const friendshipRef = doc(
+        db,
+        "friendships",
+        friendshipId
+      );
+
+      const batch = writeBatch(db);
+
+      batch.update(requestRef, {
+        status: "accepted",
+        updatedAt: serverTimestamp()
+      });
+
+      batch.set(friendshipRef, {
+        participants: [
+          request.senderId,
+          request.receiverId
+        ].sort(),
+        requestId: requestId,
+        createdAt: serverTimestamp()
+      });
+
+      await batch.commit();
+
+      showMessage("Friend request accepted successfully.");
+
+    } else if (action === "decline") {
+      await updateDoc(requestRef, {
+        status: "declined",
+        updatedAt: serverTimestamp()
+      });
+
+      showMessage("Friend request declined.");
+
+    } else if (action === "cancel") {
+
+      await updateDoc(requestRef, {
+        status: "cancelled",
+        updatedAt: serverTimestamp()
+      });
+
+      showMessage("Your friend request has been cancelled.");
+    }
+
+  } catch (error) {
+
+    console.error("Request action error:", error);
+
+    showMessage(
+      error.message || "Something went wrong. Please try again.",
+      "error"
+    );
+
+  } finally {
+    busyRequests.delete(requestId);
+    renderRequests();
+  }
+
+});
+  
+/* 11. CLEAN UP LISTENERS */
+
+window.addEventListener("beforeunload", stopListeners);
+
+</script>
+
+</body>
+</html>
