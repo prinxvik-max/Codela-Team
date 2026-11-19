@@ -29,7 +29,8 @@ body {
   background: #593722;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  align-items: safe center;
   min-height: 100vh;
   padding: 20px;
   overflow-x: hidden;

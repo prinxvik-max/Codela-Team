@@ -234,17 +234,17 @@ body {
   font-weight: 700;
 }
 
-.dob-options {
-  width: 100%;
-  min-width: 0;
+.dob-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(4px, 2vw, 10px);
+  gap: 12px;
+  width: 100%;
 }
 
-.dob-options select {
+.dob-container select {
   width: 100%;
   min-width: 0;
+  box-sizing: border-box;
   min-height: 50px;
   padding: 0 10px;
   border: 1px solid var(--line);
@@ -254,7 +254,7 @@ body {
   font: inherit;
 }
 
-.dob-options select:focus {
+.dob-container select:focus {
   outline: none;
   border-color: rgba(89, 55, 34, 0.5);
   box-shadow: 0 0 0 4px rgba(89, 55, 34, 0.08);
