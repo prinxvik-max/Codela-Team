@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#805b3d">
+  <title>TapChat</title>
+  <link rel="icon" type="image/png" href="Log.png">
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="TapChat.html" aria-label="TapChat home">
+        <img src="Log.png" alt="" class="logo">
+        <span class="brand-name">Tap<span>Chat</span></span>
+      </a>
+
+      <div class="navigation-group">
+        <p class="nav-title">YOUR SPACE</p>
+        <nav class="navigation" aria-label="Main navigation">
+          <a href="discover-users.html"><span aria-hidden="true">⌕</span> Discover</a>
+          <a href="friend-requests.html"><span aria-hidden="true">♧</span> Friend Requests</a>
+          <a href="my-friends.html"><span aria-hidden="true">♙</span> My Friends</a>
+          <a href="chats.html"><span aria-hidden="true">▤</span> Chats</a>
+          <a class="active" href="settings.html" aria-current="page"><span aria-hidden="true">⚙</span> Settings</a>
+        </nav>
+      </div>
+
+      <p class="sidebar-note">Make TapChat feel like yours.</p>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <p class="breadcrumb">Your space <span aria-hidden="true">/</span> <strong>Settings</strong></p>
+        <div class="user-chip">
+          <span class="user-avatar" aria-hidden="true">TC</span>
+          <span>Your account</span>
+        </div>
+      </header>
+
+      <section class="page-heading" aria-labelledby="page-title">
+        <p class="eyebrow">YOUR PREFERENCES</p>
+        <h1 id="page-title">Settings</h1>
+        <p class="subtitle">Manage your profile, notifications, and privacy preferences.</p>
+      </section>
+
+      <div class="settings-layout">
+        <nav class="settings-nav" aria-label="Settings sections">
+          <a href="#profile" class="selected">Profile</a>
+          <a href="#appearance">Appearance</a>
+          <a href="#notifications">Notifications</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#account">Account</a>
+        </nav>
+
+        <div class="settings-content">
+          <section class="settings-card" id="profile" aria-labelledby="profile-title">
+            <div class="card-heading">
+              <div>
+                <h2 id="profile-title">Profile</h2>
+                <p>Update how you appear to other people on TapChat.</p>
+              </div>
+              <div class="profile-avatar" aria-label="Profile initials">TC</div>
+            </div>
+
+            <div class="form-grid">
+              <label class="field">
+                <span>Display name</span>
+                <input type="text" name="displayName" autocomplete="name" placeholder="Your name">
+              </label>
+              <label class="field">
+                <span>Username</span>
+                <input type="text" name="username" autocomplete="username" placeholder="@username">
+              </label>
+              <label class="field field-full">
+                <span>About</span>
+                <textarea name="about" rows="3" maxlength="160" placeholder="A little about you"></textarea>
+                <small>Keep it short. Up to 160 characters.</small>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-card" id="appearance" aria-labelledby="appearance-title">
+            <div class="card-heading">
+              <div>
+                <h2 id="appearance-title">Appearance</h2>
+                <p>Choose how TapChat looks on this device.</p>
+              </div>
+            </div>
+            <fieldset class="choice-list">
+              <legend class="sr-only">Color theme</legend>
+              <label class="choice-row">
+                <span class="choice-copy"><strong>Light</strong><small>Warm cream and brown colors</small></span>
+                <input type="radio" name="theme" value="light" checked>
+              </label>
+              <label class="choice-row">
+                <span class="choice-copy"><strong>Dark</strong><small>A darker appearance for low-light use</small></span>
+                <input type="radio" name="theme" value="dark">
+              </label>
+              <label class="choice-row">
+                <span class="choice-copy"><strong>Use device setting</strong><small>Match your device appearance</small></span>
+                <input type="radio" name="theme" value="system">
+              </label>
+            </fieldset>
+          </section>
+
+          <section class="settings-card" id="notifications" aria-labelledby="notifications-title">
+            <div class="card-heading">
+              <div>
+                <h2 id="notifications-title">Notifications</h2>
+                <p>Choose which updates you want to receive.</p>
+              </div>
+            </div>
+            <div class="toggle-list">
+              <label class="toggle-row">
+                <span class="choice-copy"><strong>Messages</strong><small>Get notified when someone messages you</small></span>
+                <input type="checkbox" name="messageNotifications" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span class="choice-copy"><strong>Friend requests</strong><small>Get notified about new requests</small></span>
+                <input type="checkbox" name="friendNotifications" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span class="choice-copy"><strong>Group activity</strong><small>Get notified about group conversations</small></span>
+                <input type="checkbox" name="groupNotifications">
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-card" id="privacy" aria-labelledby="privacy-title">
+            <div class="card-heading">
+              <div>
+                <h2 id="privacy-title">Privacy</h2>
+                <p>Control what other people can see.</p>
+              </div>
+            </div>
+            <div class="toggle-list">
+              <label class="toggle-row">
+                <span class="choice-copy"><strong>Show online status</strong><small>Let friends know when you are online</small></span>
+                <input type="checkbox" name="onlineStatus" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span class="choice-copy"><strong>Read receipts</strong><small>Let people know when you have read their messages</small></span>
+                <input type="checkbox" name="readReceipts" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="select-row">
+                <span class="choice-copy"><strong>Who can find me</strong><small>Choose who can discover your profile</small></span>
+                <select name="discoverability" aria-label="Who can find me">
+                  <option value="everyone">Everyone</option>
+                  <option value="friends">Friends only</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-card" id="account" aria-labelledby="account-title">
+            <div class="card-heading">
+              <div>
+                <h2 id="account-title">Account</h2>
+                <p>Manage your sign-in details.</p>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="choice-copy">
+                <strong>Email address</strong>
+                <small>Your email is not connected yet.</small>
+              </div>
+              <a class="account-link" href="TapChatloginpage.html">Sign in</a>
+            </div>
+          </section>
+
+          <p class="settings-note">Settings controls are a front-end preview and are not saved to an account yet.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

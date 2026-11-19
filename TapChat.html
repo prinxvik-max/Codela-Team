@@ -4,23 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#593722">
+  <meta name="description" content="TapChat helps you stay close to the people who matter through simple messaging, groups, and media sharing.">
   <title>TapChat</title>
   <link rel="icon" type="image/png" href="Log.png">
   <link rel="stylesheet" href="TapChat.css">
 </head>
 <body>
-  <header class="site-header">   
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="TapChat home">
       <img class="logo" src="Log.png" alt="TapChat">
+    </a>
     <nav class="site-nav" aria-label="Main navigation">
-      <a href="#homes">Home</a>
+      <a href="#home">Home</a>
       <a href="#features">Features</a>
-      <a href="">About</a>
-      <button class="contact-button" type="button"><a href="./contact.html" >Contact Us</a></button>
+      <a href="#about">About</a>
+      <a class="contact-button" href="./contact.html">Contact Us</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero" id="homes" aria-labelledby="hero-title">
+    <section class="hero" id="home" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow">Chat <span aria-hidden="true">•</span> Connect <span aria-hidden="true">•</span> Share</p>
         <h1 id="hero-title">
@@ -31,9 +34,9 @@
           Stay connected to people who matter. Share messages, exchange moments,
           and keep your conversations organised in one simple experience.
         </p>
-        <button class="get-button" type="button"><a href="./TapChatsignuppage.html">
-          Get Started <span aria-hidden="true">→</span></a>
-        </button>
+        <a class="get-button" href="./TapChatsignuppage.html">
+          Get Started <span aria-hidden="true">→</span>
+        </a>
       </div>
 
       <div class="hero-art" aria-hidden="true">
@@ -41,54 +44,118 @@
         <img class="hero-image" src="Img.png" alt="">
       </div>
     </section>
-    
-  </main>
-<br>
 
-    <section class="feature" id="features">
+    <section class="feature" id="features" aria-labelledby="features-title">
       <div class="general-container">
-        <div class="feature-header">
-          <span class="everything">Everything You Need to Stay Connected</span>
-          <span class="tools">Simple tools to make everyday converstion easier.</span>
-        </div>
+        <header class="feature-header">
+          <p class="section-eyebrow">MADE FOR EVERYDAY CONNECTION</p>
+          <h2 class="everything" id="features-title">Everything You Need to Stay Connected</h2>
+          <p class="tools">Simple tools to make everyday conversations easier.</p>
+        </header>
 
         <div class="feature-grid">
-          <div class="container1">
-            <img src="./Instant messaging.jpg" class="instant-pic">
-            <div class="message-circle"></div>
-            <img src="./boxicons--message-bubble-reply.svg" alt="" class="message-icon">
-            <span class="message-icon-writeup">Instant Messaging</span>
-            <span class="message-icon-writeup2">Send and receive messages<br>through a clean, easy-to-use<br>chat interface.</span>
-            
-          </div>
+          <article class="feature-card">
+            <img class="feature-image" src="./Instant messaging.jpg" alt="A person using a phone to chat">
+            <div class="feature-content">
+              <span class="feature-icon" aria-hidden="true">
+                <img src="./boxicons--message-bubble-reply.svg" alt="">
+              </span>
+              <h3>Instant Messaging</h3>
+              <p>Send and receive messages through a clean, easy-to-use chat interface.</p>
+            </div>
+          </article>
 
-          <div class="container2">
-            <img src="./Group conversation.jpg" class="group-pic">
-            <div class="people-circle"></div>
-            <img src="./akar-icons--people-group.svg" alt="" class="people-icon">
-            <span class="people-icon-writeup">Group Conversations</span>
-            <span class="people-icon-writeup2">Bring friends, classmates,<br>and teams together in one<br>place.</span>
-          </div>
+          <article class="feature-card">
+            <img class="feature-image" src="./Group conversation.jpg" alt="Friends talking together">
+            <div class="feature-content">
+              <span class="feature-icon" aria-hidden="true">
+                <img src="./akar-icons--people-group.svg" alt="">
+              </span>
+              <h3>Group Conversations</h3>
+              <p>Bring friends, classmates, and teams together in one place.</p>
+            </div>
+          </article>
 
-          <div class="container3">
-            <img src="./Media sharing.jpg" class="media-pic">
-            <div class="image-circle"></div>
-            <img src="./akar-icons--image.svg" alt="" class="image-icon">
-            <span class="image-icon-writeup">Media Sharing</span>
-            <span class="image-icon-writeup2">Share pictures, videos, and<br>other supported files with<br>your contact.</span>
-          </div>
+          <article class="feature-card">
+            <img class="feature-image" src="./Media sharing.jpg" alt="A phone displaying shared photos">
+            <div class="feature-content">
+              <span class="feature-icon" aria-hidden="true">
+                <img src="./akar-icons--image.svg" alt="">
+              </span>
+              <h3>Media Sharing</h3>
+              <p>Share pictures, videos, and other supported files with your contacts.</p>
+            </div>
+          </article>
 
-          <div class="container4">
-            <img src="./smart notification.jpg" class="notification-pic">
-            <div class="notification-circle"></div>
-            <img src="./clarity--notification-solid-badged.svg" alt="" class="notification-icon">
-            <span class="notification-icon-writeup">Smart Notifications</span>
-            <span class="notification-icon-writeup2">Keep up with new messages<br>and important conversations.</span>
-          </div>
+          <article class="feature-card">
+            <img class="feature-image" src="./smart notification.jpg" alt="A phone showing a new message notification">
+            <div class="feature-content">
+              <span class="feature-icon" aria-hidden="true">
+                <img src="./clarity--notification-solid-badged.svg" alt="">
+              </span>
+              <h3>Smart Notifications</h3>
+              <p>Keep up with new messages and important conversations.</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="about-content">
+        <p class="section-eyebrow">A LITTLE MORE PERSONAL</p>
+        <h2 id="about-title">Good conversations bring us closer.</h2>
+        <p>
+          TapChat gives your conversations a simple place to live. Catch up one-on-one,
+          bring everyone into a group, and share the moments you want to remember.
+        </p>
+        <a class="about-link" href="./TapChatsignuppage.html">Join TapChat <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="about-mark" aria-hidden="true">
+        <span class="about-bubble bubble-one"></span>
+        <span class="about-bubble bubble-two"></span>
+        <span class="about-bubble bubble-three"></span>
+      </div>
+    </section>
+  </main>
 
+  <footer class="site-footer">
+    <a class="footer-brand" href="#home">
+      <img src="Log.png" alt="" class="footer-logo">
+      <span>TapChat</span>
+    </a>
+    <p>Stay close to the people who matter.</p>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="./contact.html">Contact</a>
+    </nav>
+    <nav class="social-links" aria-label="Social media">
+      <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26L23 21.75h-6.74l-5.214-6.817L4.77 21.75H1.46l7.73-8.835L1 2.25h6.91l4.707 6.231zm-1.161 17.52h1.833L6.912 4.126H4.945z"></path>
+        </svg>
+      </a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.26-1.5 1.55-1.5h1.66V3.62A22 22 0 0 0 14.8 3.5c-2.4 0-4.05 1.47-4.05 4.17v2.23H8v3.1h2.75v8h2.75Z"></path>
+        </svg>
+      </a>
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.6 7.3a7.1 7.1 0 0 1-4.2-1.4v8.2a6.1 6.1 0 1 1-5.3-6v3.4a2.8 2.8 0 1 0 1.9 2.7V2h3.4c.2 2 1.7 3.6 4.2 3.9v1.4Z"></path>
+        </svg>
+      </a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+          <circle cx="12" cy="12" r="4"></circle>
+          <circle class="social-dot" cx="17.5" cy="6.5" r=".75"></circle>
+        </svg>
+      </a>
+    </nav>
+    <p class="copyright">&copy; 2026 TapChat. All rights reserved.</p>
+  </footer>
 </body>
 </html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#805b3d">
+  <title>TapChat</title>
+  <link rel="icon" type="image/png" href="Log.png">
+  <link rel="stylesheet" href="chats.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="TapChat.html" aria-label="TapChat home">
+        <img src="Log.png" alt="" class="logo">
+        <span class="brand-name">Tap<span>Chat</span></span>
+      </a>
+
+      <div class="navigation-group">
+        <p class="nav-title">YOUR SPACE</p>
+        <nav class="navigation" aria-label="Main navigation">
+          <a href="discover-users.html"><span aria-hidden="true">⌕</span> Discover</a>
+          <a href="friend-requests.html"><span aria-hidden="true">♧</span> Friend Requests</a>
+          <a href="my-friends.html"><span aria-hidden="true">♙</span> My Friends</a>
+          <a class="active" href="chats.html" aria-current="page"><span aria-hidden="true">▤</span> Chats</a>
+          <a href="settings.html"><span aria-hidden="true">⚙</span> Settings</a>
+        </nav>
+      </div>
+
+      <p class="sidebar-note">Keep in touch with the people who matter.</p>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <p class="breadcrumb">People <span aria-hidden="true">/</span> <strong>Chats</strong></p>
+        <div class="user-chip">
+          <span class="user-avatar" aria-hidden="true">TC</span>
+          <span>Your account</span>
+        </div>
+      </header>
+
+      <section class="page-heading" aria-labelledby="page-title">
+        <p class="eyebrow">YOUR CONVERSATIONS</p>
+        <div class="heading-row">
+          <div>
+            <h1 id="page-title">Chats</h1>
+            <p class="subtitle">Your recent conversations, all in one place.</p>
+          </div>
+          <div class="heading-actions">
+            <button class="new-group" id="openGroupDialog" type="button">＋ Create group</button>
+            <a class="new-chat" href="discover-users.html">Find people</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="chat-workspace">
+        <section class="chat-panel" id="chatListPanel" aria-label="Recent conversations">
+          <div class="list-heading">
+            <h2>Recent</h2>
+            <span id="chatCount">5 conversations</span>
+          </div>
+          <div class="chat-list" id="chatList"></div>
+        </section>
+
+        <section class="conversation-panel" id="conversationPanel" aria-label="Conversation">
+          <header class="conversation-header">
+            <button class="back-to-list" id="backToList" type="button" aria-label="Back to conversations">←</button>
+            <span class="conversation-avatar" id="conversationAvatar" aria-hidden="true"></span>
+            <div class="conversation-person">
+              <h2 id="conversationName">Choose a conversation</h2>
+              <p class="presence" id="conversationStatus">Select someone to see their status</p>
+            </div>
+            <div class="conversation-actions" aria-label="Call actions">
+              <button class="icon-button" id="audioCallButton" type="button" aria-label="Start audio call" title="Audio call">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 4h3l2 5-2 1.5a15 15 0 0 0 5.5 5.5L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"></path>
+                </svg>
+              </button>
+              <button class="icon-button" id="videoCallButton" type="button" aria-label="Start video call" title="Video call">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="6" width="13" height="12" rx="2"></rect>
+                  <path d="m16 10 5-3v10l-5-3"></path>
+                </svg>
+              </button>
+              <button class="exit-chat-button" id="exitChatButton" type="button" aria-label="Exit this chat" title="Exit chat">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m7 7 10 10M17 7 7 17"></path>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <div class="conversation-content">
+            <section class="message-panel" aria-label="Messages">
+              <div class="message-history" id="messageHistory" aria-live="polite"></div>
+              <form class="message-composer" id="messageForm">
+                <label class="sr-only" for="messageInput">Write a message</label>
+                <input id="messageInput" type="text" placeholder="Write a message..." autocomplete="off">
+                <button type="submit">Send</button>
+              </form>
+            </section>
+          </div>
+        </section>
+      </div>
+      <p class="demo-note">This page is a front-end preview. Messages and groups are only saved in this browser session; connect a chat service for live conversations.</p>
+    </main>
+  </div>
+
+  <dialog class="group-dialog" id="groupDialog" aria-labelledby="groupDialogTitle">
+    <form id="groupForm" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">START TOGETHER</p>
+          <h2 id="groupDialogTitle">Create a group</h2>
+        </div>
+        <button class="dialog-close" id="closeGroupDialog" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <label class="field-label" for="groupName">Group name</label>
+      <input class="group-name-input" id="groupName" name="groupName" type="text" maxlength="40" placeholder="e.g. Weekend plans" required>
+      <fieldset class="member-picker">
+        <legend>Add people <span>(optional)</span></legend>
+        <label><input type="checkbox" name="members" value="Alex Morgan"> Alex Morgan</label>
+        <label><input type="checkbox" name="members" value="Jordan Davis"> Jordan Davis</label>
+        <label><input type="checkbox" name="members" value="Sam Kim"> Sam Kim</label>
+        <label><input type="checkbox" name="members" value="Riley Parker"> Riley Parker</label>
+      </fieldset>
+      <p class="form-message" id="groupFormMessage" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="cancel-button" id="cancelGroup" type="button">Cancel</button>
+        <button class="create-button" type="submit">Create group</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const chats = [
+      {
+        id: "alex",
+        name: "Alex Morgan",
+        initials: "AM",
+        avatar: "avatar-one",
+        status: "online",
+        preview: "That sounds good! Talk soon.",
+        time: "10:42 AM",
+        unread: 2,
+        messages: [
+          { text: "Hey! Are we still on for this weekend?", from: "them", time: "10:35 AM" },
+          { text: "Yes, that works for me.", from: "you", time: "10:39 AM" },
+          { text: "That sounds good! Talk soon.", from: "them", time: "10:42 AM" }
+        ]
+      },
+      {
+        id: "jordan",
+        name: "Jordan Davis",
+        initials: "JD",
+        avatar: "avatar-two",
+        status: "offline",
+        lastSeen: "last seen recently",
+        preview: "I shared the photos from yesterday.",
+        time: "9:18 AM",
+        messages: [{ text: "I shared the photos from yesterday.", from: "them", time: "9:18 AM" }]
+      },
+      {
+        id: "sam",
+        name: "Sam Kim",
+        initials: "SK",
+        avatar: "avatar-three",
+        status: "online",
+        preview: "Are we still meeting this weekend?",
+        time: "Yesterday",
+        unread: 1,
+        messages: [{ text: "Are we still meeting this weekend?", from: "them", time: "Yesterday" }]
+      },
+      {
+        id: "riley",
+        name: "Riley Parker",
+        initials: "RP",
+        avatar: "avatar-four",
+        status: "offline",
+        lastSeen: "last seen today",
+        preview: "Thanks for the recommendation!",
+        time: "Yesterday",
+        messages: [{ text: "Thanks for the recommendation!", from: "them", time: "Yesterday" }]
+      },
+      {
+        id: "morgan",
+        name: "Morgan Taylor",
+        initials: "MT",
+        avatar: "avatar-five",
+        status: "offline",
+        lastSeen: "last seen yesterday",
+        preview: "You: See you there!",
+        time: "Mon",
+        messages: [{ text: "See you there!", from: "you", time: "Mon" }]
+      }
+    ];
+
+    const chatList = document.getElementById("chatList");
+    const chatListPanel = document.getElementById("chatListPanel");
+    const conversationPanel = document.getElementById("conversationPanel");
+    const conversationName = document.getElementById("conversationName");
+    const conversationStatus = document.getElementById("conversationStatus");
+    const conversationAvatar = document.getElementById("conversationAvatar");
+    const messageHistory = document.getElementById("messageHistory");
+    const messageForm = document.getElementById("messageForm");
+    const messageInput = document.getElementById("messageInput");
+    const groupDialog = document.getElementById("groupDialog");
+    const groupForm = document.getElementById("groupForm");
+    const toast = document.getElementById("toast");
+    let activeChatId = null;
+    let toastTimer;
+
+    function renderChatList() {
+      chatList.innerHTML = chats.map(chat => `
+        <button class="chat-item${chat.id === activeChatId ? " selected" : ""}" type="button" data-chat-id="${chat.id}" aria-pressed="${chat.id === activeChatId}">
+          <span class="chat-avatar ${chat.avatar}" aria-hidden="true">${escapeHTML(chat.initials)}</span>
+          <span class="chat-copy">
+            <span class="chat-title-row">
+              <span class="chat-person-name">${escapeHTML(chat.name)}</span>
+              <time>${escapeHTML(chat.time || "Now")}</time>
+            </span>
+            <span class="chat-preview-row">
+              <span class="chat-preview">${escapeHTML(chat.preview || "Start a conversation")}</span>
+              ${chat.status !== "group" ? `<span class="presence-dot ${chat.status === "online" ? "online" : ""}" aria-label="${chat.status === "online" ? "Online" : "Offline"}"></span>` : ""}
+              ${chat.unread ? `<span class="unread-count" aria-label="${chat.unread} unread messages">${chat.unread}</span>` : ""}
+            </span>
+          </span>
+        </button>
+      `).join("");
+      const count = chats.length;
+      document.getElementById("chatCount").textContent = `${count} ${count === 1 ? "conversation" : "conversations"}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
+
+    function selectChat(chatId) {
+      const chat = chats.find(item => item.id === chatId);
+      if (!chat) return;
+
+      activeChatId = chat.id;
+      chat.unread = 0;
+      conversationName.textContent = chat.name;
+      conversationStatus.innerHTML = chat.status === "online"
+        ? '<span class="status-indicator online"></span>Online'
+        : chat.status === "group"
+          ? `${chat.memberNames.length} ${chat.memberNames.length === 1 ? "member" : "members"}`
+          : `<span class="status-indicator"></span>${escapeHTML(chat.lastSeen || "Offline")}`;
+      conversationAvatar.textContent = chat.initials;
+      conversationAvatar.className = `conversation-avatar ${chat.avatar}`;
+      renderChatList();
+      renderMessages(chat);
+      conversationPanel.classList.remove("is-closed");
+      document.querySelector(".chat-workspace").classList.remove("chat-list-only");
+      conversationPanel.classList.add("has-chat");
+      messageInput.disabled = false;
+      messageForm.querySelector("button[type='submit']").disabled = false;
+      document.getElementById("audioCallButton").disabled = false;
+      document.getElementById("videoCallButton").disabled = false;
+      if (window.matchMedia("(max-width: 760px)").matches) {
+        chatListPanel.classList.add("mobile-hidden");
+        conversationPanel.classList.add("mobile-visible");
+      }
+    }
+
+    function exitCurrentChat() {
+      activeChatId = null;
+      conversationName.textContent = "Choose a conversation";
+      conversationStatus.textContent = "Select someone to start chatting";
+      conversationAvatar.textContent = "";
+      conversationAvatar.className = "conversation-avatar";
+      messageHistory.innerHTML = '<div class="message-empty">Choose a conversation from the list.</div>';
+      messageInput.value = "";
+      messageInput.disabled = true;
+      messageForm.querySelector("button[type='submit']").disabled = true;
+      document.getElementById("audioCallButton").disabled = true;
+      document.getElementById("videoCallButton").disabled = true;
+      conversationPanel.classList.add("is-closed");
+      document.querySelector(".chat-workspace").classList.add("chat-list-only");
+      renderChatList();
+      chatListPanel.classList.remove("mobile-hidden");
+      conversationPanel.classList.remove("mobile-visible");
+    }
+
+    function renderMessages(chat) {
+      messageHistory.innerHTML = chat.messages.length
+        ? chat.messages.map(message => `
+          <div class="message-row ${message.from === "you" ? "sent" : "received"}">
+            <div class="message-bubble">
+              <p>${escapeHTML(message.text)}</p>
+              <time>${escapeHTML(message.time)}</time>
+            </div>
+          </div>
+        `).join("")
+        : '<div class="message-empty">No messages yet. Send the first message.</div>';
+      messageHistory.scrollTop = messageHistory.scrollHeight;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+    }
+
+    document.getElementById("audioCallButton").addEventListener("click", () => {
+      showToast("Audio calls will be available when a calling service is connected.");
+    });
+
+    document.getElementById("videoCallButton").addEventListener("click", () => {
+      showToast("Video calls will be available when a calling service is connected.");
+    });
+
+    document.getElementById("exitChatButton").addEventListener("click", exitCurrentChat);
+
+    chatList.addEventListener("click", event => {
+      const button = event.target.closest("[data-chat-id]");
+      if (button) selectChat(button.dataset.chatId);
+    });
+
+    messageForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const text = messageInput.value.trim();
+      const chat = chats.find(item => item.id === activeChatId);
+      if (!text || !chat) return;
+      chat.messages.push({ text, from: "you", time: "Now" });
+      chat.preview = `You: ${text}`;
+      chat.time = "Now";
+      renderMessages(chat);
+      renderChatList();
+      messageInput.value = "";
+      messageInput.focus();
+    });
+
+    document.getElementById("openGroupDialog").addEventListener("click", () => {
+      groupForm.reset();
+      document.getElementById("groupFormMessage").textContent = "";
+      groupDialog.showModal();
+      document.getElementById("groupName").focus();
+    });
+
+    document.getElementById("closeGroupDialog").addEventListener("click", () => groupDialog.close());
+    document.getElementById("cancelGroup").addEventListener("click", () => groupDialog.close());
+
+    groupForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = document.getElementById("groupName").value.trim();
+      if (!name) {
+        document.getElementById("groupFormMessage").textContent = "Enter a group name to continue.";
+        return;
+      }
+
+      const members = [...groupForm.querySelectorAll('input[name="members"]:checked')].map(input => input.value);
+      const initials = name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+      const group = {
+        id: `group-${Date.now()}`,
+        name,
+        initials: initials || "G",
+        avatar: "group-avatar",
+        status: "group",
+        memberNames: members,
+        preview: members.length ? `Group · ${members.length} ${members.length === 1 ? "member" : "members"}` : "New group",
+        time: "Now",
+        messages: []
+      };
+      chats.unshift(group);
+      groupDialog.close();
+      renderChatList();
+      selectChat(group.id);
+      showToast("Group created in this preview.");
+    });
+
+    document.getElementById("backToList").addEventListener("click", () => {
+      exitCurrentChat();
+    });
+
+    groupDialog.addEventListener("click", event => {
+      if (event.target === groupDialog) groupDialog.close();
+    });
+
+    renderChatList();
+    selectChat(chats[0].id);
+  </script>
+</body>
+</html>
