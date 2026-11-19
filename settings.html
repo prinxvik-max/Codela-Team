@@ -7,11 +7,13 @@
   <title>TapChat</title>
   <link rel="icon" type="image/png" href="Log.png">
   <link rel="stylesheet" href="settings.css">
+  <script src="cloudinary-media.js"></script>
+  <script src="tapchat-page-media.js" defer></script>
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
-      <a class="brand" href="index.html" aria-label="TapChat home">
+      <a class="brand" href="TapChat.html" aria-label="TapChat home">
         <img src="Log.png" alt="" class="logo">
         <span class="brand-name">Tap<span>Chat</span></span>
       </a>
@@ -33,7 +35,7 @@
           <span id="sidebarInitials" aria-hidden="true">TC</span>
           <span class="photo-edit" aria-hidden="true">✎</span>
         </label>
-        <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/*">
+        <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif">
         <div class="sidebar-account-copy">
           <strong>Your account</strong>
           <span>View and edit profile</span>
@@ -206,7 +208,7 @@
 
     photoInput.addEventListener("change", event => {
       const file = event.target.files[0];
-      if (!file || !file.type.startsWith("image/")) return;
+      if (!file || !/^image\/(jpeg|png|webp|gif)$/.test(file.type)) return;
       const reader = new FileReader();
       reader.onload = () => {
         localStorage.setItem("tapchatProfilePhoto", reader.result);
