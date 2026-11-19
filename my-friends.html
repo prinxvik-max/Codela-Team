@@ -1,0 +1,1482 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#302319">
+<title>My Friends | TapChat</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root {
+  --dark: #302319;
+  --dark2: #493629;
+  --brown: #79563D;
+  --accent: #B17C51;
+  --cream: #F8F3EB;
+  --surface: #FFFDF9;
+  --soft: #EDE3D6;
+  --muted: #968779;
+  --text: #35281F;
+  --green: #367B58;
+  --red: #B34D43;
+  --shadow: 0 12px 35px rgba(48,35,25,.07);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 250px;
+  background: var(--dark);
+  color: #fff;
+  padding: 30px 19px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.logo-space {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  margin-bottom: 36px;
+}
+
+.logo-space span {
+  font-size: 10px;
+  color: #BDA58F;
+  letter-spacing: 2px;
+}
+
+.nav-label {
+  color: #A99788;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  padding: 0 12px;
+  margin-bottom: 13px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #D3C5B8;
+  padding: 14px 13px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.nav-links a i {
+  width: 19px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: #55402F;
+  color: #F2D8B9;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid #554435;
+  padding-top: 20px;
+}
+
+/* MAIN */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 34px 48px 50px;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 37px;
+}
+
+.breadcrumb {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.breadcrumb strong { color: var(--dark); }
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--brown);
+  font-weight: 700;
+}
+
+.account-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: var(--soft);
+  display: grid;
+  place-items: center;
+  color: var(--brown);
+}
+
+.heading {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 9px;
+}
+
+.heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 38px);
+  color: var(--dark);
+  margin-bottom: 9px;
+}
+
+.heading p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* FRIEND SUMMARY */
+
+.summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 29px;
+}
+
+.summary-card {
+  background: var(--surface);
+  border: 1px solid #EDE4D9;
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow);
+}
+
+.summary-icon {
+  width: 47px;
+  height: 47px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: var(--brown);
+  background: #F0E4D5;
+}
+
+.summary-info small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.summary-info strong {
+  display: block;
+  font-size: 25px;
+  color: var(--dark);
+  margin-top: 3px;
+}
+
+/* FRIEND CONTENT */
+
+.content-card {
+  background: var(--surface);
+  border: 1px solid #EDE4D9;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.toolbar {
+  padding: 20px 23px;
+  border-bottom: 1px solid #EEE7DE;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.toolbar-title {
+  color: var(--dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.toolbar-title span {
+  color: var(--muted);
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.search {
+  width: min(260px, 100%);
+  position: relative;
+}
+
+.search i {
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.search input {
+  width: 100%;
+  border: 1px solid #E8DED2;
+  background: #FBF8F3;
+  border-radius: 9px;
+  outline: none;
+  padding: 10px 12px 10px 35px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.search input:focus {
+  border-color: var(--accent);
+}
+
+.friend-list {
+  padding: 5px 23px 20px;
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid #F0EAE2;
+}
+
+.friend-item:last-child {
+  border-bottom: none;
+}
+
+.avatar {
+  width: 53px;
+  height: 53px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #E9D9C6;
+  color: var(--brown);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person {
+  flex: 1;
+  min-width: 0;
+}
+
+.person strong {
+  display: block;
+  font-size: 13px;
+  color: var(--dark);
+  margin-bottom: 5px;
+}
+
+.person span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.person small {
+  display: block;
+  font-size: 10px;
+  color: #A89B8E;
+  margin-top: 6px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: .2s;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-message {
+  background: var(--dark);
+  color: #fff;
+}
+
+.btn-message:hover {
+  background: var(--brown);
+}
+
+.btn-more {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: #F2EADF;
+  color: var(--brown);
+  font-size: 14px;
+}
+
+.btn-more:hover {
+  background: #E8D7C3;
+}
+
+.btn-remove {
+  background: #FBEAE7;
+  color: var(--red);
+  padding: 9px 12px;
+  width: 100%;
+}
+
+.btn-remove:hover {
+  background: #F4DAD5;
+}
+
+.menu-wrap {
+  position: relative;
+}
+
+.friend-menu {
+  position: absolute;
+  right: 0;
+  top: 43px;
+  z-index: 5;
+  width: 155px;
+  padding: 7px;
+  border: 1px solid #EDE4D9;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.friend-menu.show {
+  display: block;
+}
+
+/* EMPTY / LOADING */
+
+.empty-state {
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.empty-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: #F3E9DC;
+  color: var(--brown);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 17px;
+  font-size: 23px;
+}
+
+.empty-state h3 {
+  color: var(--dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 310px;
+  margin: 0 auto;
+}
+
+.empty-action {
+  display: inline-flex;
+  margin-top: 18px;
+  text-decoration: none;
+  color: white;
+  background: var(--dark);
+  padding: 11px 17px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.loading i {
+  margin-right: 7px;
+}
+
+.status-message {
+  margin: 15px 23px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 11px;
+  display: none;
+  line-height: 1.6;
+}
+
+.status-message.error {
+  display: block;
+  background: #FBEAE7;
+  color: #A33F35;
+}
+
+.status-message.success {
+  display: block;
+  background: #E8F2EA;
+  color: #367B58;
+}
+
+.footer-note {
+  text-align: center;
+  color: #AA9D90;
+  font-size: 10px;
+  padding: 24px 0 0;
+}
+
+/* CONFIRMATION DIALOG */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(35, 25, 17, .55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.dialog-backdrop.show {
+  display: flex;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 370px;
+  padding: 27px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+
+.dialog-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #FBEAE7;
+  color: var(--red);
+  margin-bottom: 17px;
+  font-size: 18px;
+}
+
+.dialog h3 {
+  color: var(--dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 9px;
+}
+
+.dialog p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.dialog-actions button {
+  flex: 1;
+  padding: 12px;
+}
+
+.btn-keep {
+  background: #F0E8DE;
+  color: var(--brown);
+}
+
+.btn-confirm-remove {
+  background: var(--red);
+  color: white;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+  .sidebar { width: 205px; }
+  .main { padding: 28px 25px 40px; }
+}
+
+@media(max-width: 650px) {
+  .app { display: block; }
+
+  .sidebar {
+    width: 100%;
+    padding: 12px 13px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .logo-space {
+    height: 26px;
+    margin: 0 0 12px;
+    padding-left: 5px;
+  }
+
+  .nav-label, .sidebar-bottom { display: none; }
+
+  .nav-links {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 5px;
+    scrollbar-width: none;
+  }
+
+  .nav-links a {
+    white-space: nowrap;
+    padding: 10px 11px;
+    font-size: 10px;
+    gap: 7px;
+  }
+
+  .nav-links a i { font-size: 12px; }
+
+  .main { padding: 22px 14px 35px; }
+
+  .topbar { margin-bottom: 28px; }
+
+  .toolbar { padding: 16px; }
+
+  .search { width: 100%; }
+
+  .friend-list { padding: 5px 14px 15px; }
+
+  .friend-item {
+    gap: 10px;
+    padding: 16px 0;
+  }
+
+  .avatar {
+    width: 43px;
+    height: 43px;
+    font-size: 14px;
+  }
+
+  .person strong { font-size: 11px; }
+  .person span { font-size: 10px; }
+
+  .actions { gap: 5px; }
+
+  .btn-message {
+    padding: 10px;
+    font-size: 10px;
+  }
+
+  .btn-message i { display: none; }
+
+  .btn-more {
+    width: 33px;
+    height: 33px;
+  }
+}
+
+@media(max-width: 360px) {
+  .nav-links a { padding: 9px 8px; }
+  .nav-links a i { display: none; }
+  .friend-item { gap: 7px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="logo-space">
+      <!-- INSERT YOUR TAPCHAT LOGO HERE -->
+      <span>LOGO SPACE</span>
+    </div>
+
+    <div class="nav-label">TAPCHAT MENU</div>
+
+    <nav class="nav-links">
+
+      <a href="discover-users.html">
+        <i class="fa-solid fa-compass"></i>
+        Discover
+      </a>
+
+      <a href="friend-requests.html">
+        <i class="fa-solid fa-user-plus"></i>
+        Requests
+      </a>
+
+      <a href="my-friends.html" class="active">
+        <i class="fa-solid fa-user-group"></i>
+        My Friends
+      </a>
+
+      <a href="private-chat.html">
+        <i class="fa-regular fa-comments"></i>
+        Messages
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+      <nav class="nav-links">
+        <a href="profile.html">
+          <i class="fa-regular fa-user"></i>
+          My Profile
+        </a>
+      </nav>
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="breadcrumb">
+        TapChat / <strong>My Friends</strong>
+      </div>
+
+      <div class="account">
+        <span id="accountName">My Account</span>
+        <div class="account-avatar">
+          <i class="fa-regular fa-user"></i>
+        </div>
+      </div>
+    </header>
+
+
+    <section class="heading">
+      <div class="eyebrow">YOUR INNER CIRCLE</div>
+
+      <h1>My Friends</h1>
+
+      <p>
+        Stay connected with the people who matter.
+        Your friendships, all in one place.
+      </p>
+    </section>
+
+
+    <section class="summary">
+
+      <div class="summary-card">
+
+        <div class="summary-icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+
+        <div class="summary-info">
+          <small>Total Friends</small>
+          <strong id="friendCount">0</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="content-card">
+
+      <div class="toolbar">
+
+        <div class="toolbar-title">
+          Your Connections
+          <span id="listCount">(0)</span>
+        </div>
+
+        <div class="search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search by name or username..."
+          >
+        </div>
+
+      </div>
+
+      <div id="statusMessage" class="status-message"></div>
+
+      <div id="friendContent">
+
+        <div class="loading">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          Loading your friends...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="footer-note">
+      Your connections. Your circle. Your TapChat.
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- REMOVE FRIEND CONFIRMATION -->
+
+<div class="dialog-backdrop" id="removeDialog">
+
+  <div class="dialog">
+
+    <div class="dialog-icon">
+      <i class="fa-solid fa-user-minus"></i>
+    </div>
+
+    <h3>Remove Friend?</h3>
+
+    <p id="removeDescription">
+      Are you sure you want to remove this person from your friends?
+    </p>
+
+    <div class="dialog-actions">
+
+      <button class="btn btn-keep" id="keepFriend">
+        Keep Friend
+      </button>
+
+      <button class="btn btn-confirm-remove" id="confirmRemove">
+        Remove
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+/*
+=====================================================
+TAPCHAT MY FRIENDS - FIREBASE INTEGRATION
+=====================================================
+
+Firestore collections:
+
+users/{uid}
+
+friendships/{friendshipId}
+
+Friendship document:
+
+participants: [uid1, uid2]
+requestId: "original-request-id"
+createdAt: serverTimestamp()
+
+The friendship ID is generated by sorting both
+Firebase user IDs and joining them with "__".
+
+This matches the Friend Requests page.
+*/
+
+
+/* 1. FIREBASE IMPORTS */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+
+/* 2. FIREBASE CONFIGURATION */
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+
+/* 3. INITIALIZE FIREBASE */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* 4. PAGE VARIABLES */
+
+let currentUser = null;
+let friends = [];
+let unsubscribeFriends = null;
+let selectedFriend = null;
+let menuFriendId = null;
+let busyFriends = new Set();
+
+const friendContent =
+  document.getElementById("friendContent");
+
+const searchInput =
+  document.getElementById("searchInput");
+
+const statusBox =
+  document.getElementById("statusMessage");
+
+const removeDialog =
+  document.getElementById("removeDialog");
+
+
+/* 5. HELPER FUNCTIONS */
+
+function showMessage(message, type = "success") {
+  statusBox.textContent = message;
+  statusBox.className = "status-message " + type;
+}
+
+function clearMessage() {
+  statusBox.textContent = "";
+  statusBox.className = "status-message";
+}
+
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function getInitials(name = "") {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+
+  return parts
+    .slice(0, 2)
+    .map(part => part[0])
+    .join("")
+    .toUpperCase() || "?";
+}
+
+function getFriendshipId(uid1, uid2) {
+  return [uid1, uid2].sort().join("__");
+}
+
+async function getUserDetails(uid) {
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    return {
+      uid,
+      fullName: "Unavailable User",
+      username: "",
+      photoURL: ""
+    };
+  }
+
+  return {
+    uid,
+    ...userSnap.data()
+  };
+}
+
+
+/* 6. AUTHENTICATION */
+
+onAuthStateChanged(auth, async user => {
+
+  stopFriendListener();
+
+  currentUser = user;
+  friends = [];
+
+  if (!user) {
+
+    updateCount();
+
+    friendContent.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h3>Sign in to continue</h3>
+
+        <p>
+          Please sign in to see the people
+          in your TapChat circle.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  try {
+
+    const profile = await getUserDetails(user.uid);
+
+    document.getElementById("accountName").textContent =
+      profile.fullName || profile.username || "My Account";
+
+    startFriendListener(user.uid);
+
+  } catch (error) {
+
+    console.error("Account loading error:", error);
+
+    showMessage(
+      "Unable to load your account. Please try again.",
+      "error"
+    );
+
+  }
+
+});
+
+
+/* 7. STOP OLD LISTENERS */
+
+function stopFriendListener() {
+
+  if (unsubscribeFriends) {
+    unsubscribeFriends();
+    unsubscribeFriends = null;
+  }
+
+}
+
+
+/* 8. REAL-TIME FRIENDSHIP LISTENER */
+
+function startFriendListener(uid) {
+
+  const friendsQuery = query(
+    collection(db, "friendships"),
+    where("participants", "array-contains", uid)
+  );
+
+  unsubscribeFriends = onSnapshot(
+    friendsQuery,
+
+    async snapshot => {
+
+      try {
+
+        const results = await Promise.all(
+          snapshot.docs.map(async friendshipDoc => {
+
+            const friendship = friendshipDoc.data();
+
+            const participants = friendship.participants || [];
+
+            const friendId = participants.find(
+              participant => participant !== uid
+            );
+
+            if (!friendId) return null;
+
+            const person = await getUserDetails(friendId);
+
+            return {
+              id: friendshipDoc.id,
+              friendId,
+              ...friendship,
+              person
+            };
+
+          })
+        );
+
+        friends = results.filter(Boolean);
+
+        updateCount();
+        renderFriends();
+
+      } catch (error) {
+
+        console.error("Friends loading error:", error);
+
+        showMessage(
+          "Unable to load your friends. Check your Firebase connection.",
+          "error"
+        );
+
+      }
+
+    },
+
+    error => {
+
+      console.error("Firestore listener error:", error);
+
+      showMessage(
+        "Unable to access your friends. Check Firestore security rules.",
+        "error"
+      );
+
+    }
+
+  );
+
+}
+
+
+/* 9. FRIEND COUNTER */
+
+function updateCount() {
+
+  document.getElementById("friendCount").textContent =
+    friends.length;
+
+  document.getElementById("listCount").textContent =
+    `(${friends.length})`;
+
+}
+
+
+/* 10. FRIEND SEARCH */
+
+searchInput.addEventListener("input", renderFriends);
+
+
+/* 11. RENDER FRIENDS */
+
+function renderFriends() {
+
+  const search = searchInput.value.trim().toLowerCase();
+
+  const filtered = friends.filter(friend => {
+
+    const name =
+      (friend.person.fullName || "").toLowerCase();
+
+    const username =
+      (friend.person.username || "").toLowerCase();
+
+    return name.includes(search) ||
+           username.includes(search);
+
+  });
+
+  if (filtered.length === 0) {
+
+    friendContent.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          <i class="fa-solid ${
+            search
+              ? "fa-magnifying-glass"
+              : "fa-user-group"
+          }"></i>
+        </div>
+         <h3>${
+          search
+            ? "No friends found"
+            : "Your circle starts here"
+        }</h3>
+
+        <p>${
+          search
+            ? "Try another name or username."
+            : "You haven't added any friends yet. Discover people and start building your circle."
+        }</p>
+
+        ${
+          !search
+            ? '<a href="discover-users.html" class="empty-action">Discover People <i class="fa-solid fa-arrow-right"></i></a>'
+            : ""
+        }
+
+      </div>
+    `;
+
+    return;
+  }
+
+  friendContent.innerHTML = `
+    <div class="friend-list">
+      ${filtered.map(createFriendHTML).join("")}
+    </div>
+  `;
+
+}
+  /* 12. CREATE FRIEND ITEM */
+
+function createFriendHTML(friend) {
+
+  const person = friend.person || {};
+
+  const name = person.fullName || "Unknown User";
+
+  const username = person.username
+    ? "@" + person.username.replace(/^@/, "")
+    : "TapChat friend";
+
+  const avatar = person.photoURL
+    ? `<img src="${escapeHTML(person.photoURL)}" alt="">`
+    : escapeHTML(getInitials(name));
+
+  const busy = busyFriends.has(friend.id);
+
+  return `
+
+    <article class="friend-item" data-friend="${escapeHTML(friend.id)}">
+
+      <div class="avatar">
+        ${avatar}
+      </div>
+
+      <div class="person">
+
+        <strong>${escapeHTML(name)}</strong>
+
+        <span>${escapeHTML(username)}</span>
+
+        <small>Your TapChat friend</small>
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="btn btn-message"
+          data-action="message"
+          data-friend="${escapeHTML(friend.friendId)}"
+          ${busy ? "disabled" : ""}
+        >
+          <i class="fa-regular fa-comments"></i>
+          Message
+        </button>
+         <div class="menu-wrap">
+
+          <button
+            class="btn btn-more"
+            data-action="menu"
+            data-id="${escapeHTML(friend.id)}"
+            aria-label="Friend options"
+            aria-expanded="${menuFriendId === friend.id}"
+          >
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+
+          <div class="friend-menu ${
+            menuFriendId === friend.id ? "show" : ""
+          }">
+
+            <button
+              class="btn btn-remove"
+              data-action="remove"
+              data-id="${escapeHTML(friend.id)}"
+              ${busy ? "disabled" : ""}
+            >
+              <i class="fa-solid fa-user-minus"></i>
+              Remove Friend
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* 13. FRIEND ACTIONS */
+
+friendContent.addEventListener("click", event => {
+
+  const button = event.target.closest("button[data-action]");
+
+  if (!button || !currentUser) return;
+
+  const action = button.dataset.action;
+
+  if (action === "menu") {
+
+    const id = button.dataset.id;
+
+    menuFriendId = menuFriendId === id ? null : id;
+
+    renderFriends();
+
+    return;
+  }
+
+  if (action === "remove") {
+
+    const id = button.dataset.id;
+
+    selectedFriend = friends.find(
+      friend => friend.id === id
+    );
+
+    if (!selectedFriend) return;
+
+    const name =
+      selectedFriend.person.fullName || "this friend";
+
+    document.getElementById("removeDescription").textContent =
+      `Are you sure you want to remove ${name} from your friends?`;
+  menuFriendId = null;
+
+    removeDialog.classList.add("show");
+
+    renderFriends();
+
+    return;
+  }
+
+  if (action === "message") {
+
+    const friendId = button.dataset.friend;
+
+    const person = friends.find(
+      friend => friend.friendId === friendId
+    );
+
+    if (!person) return;
+
+    const params = new URLSearchParams({
+      friendId: friendId
+    });
+
+    window.location.href =
+      `private-chat.html?${params.toString()}`;
+
+  }
+
+});
+
+
+/* 14. CLOSE MENUS WHEN CLICKING OUTSIDE */
+
+document.addEventListener("click", event => {
+
+  if (
+    !event.target.closest(".menu-wrap") &&
+    menuFriendId !== null
+  ) {
+
+    menuFriendId = null;
+    renderFriends();
+
+  }
+
+});
+
+
+/* 15. REMOVE FRIEND CONFIRMATION */
+
+document.getElementById("keepFriend")
+.addEventListener("click", () => {
+
+  selectedFriend = null;
+
+  removeDialog.classList.remove("show");
+
+});
+
+
+document.getElementById("confirmRemove")
+.addEventListener("click", async () => {
+
+  if (!selectedFriend || !currentUser) return;
+
+  const friendship = selectedFriend;
+
+  if (busyFriends.has(friendship.id)) return;
+
+  busyFriends.add(friendship.id);
+
+  const confirmButton =
+    document.getElementById("confirmRemove");
+
+  confirmButton.disabled = true;
+  confirmButton.textContent = "Removing...";
+
+  try {
+
+    /*
+      This removes the friendship document.
+
+      Both participants will lose the friendship
+      when the real-time Firestore listener updates.
+    */
+
+    await deleteDoc(
+      doc(db, "friendships", friendship.id)
+    );
+
+    selectedFriend = null;
+
+    removeDialog.classList.remove("show");
+
+    showMessage(
+      "Friend removed from your connections."
+    );
+  } catch (error) {
+
+    console.error("Remove friend error:", error);
+
+    showMessage(
+      "Unable to remove this friend. Please check your Firebase security rules.",
+      "error"
+    );
+
+  } finally {
+
+    busyFriends.delete(friendship.id);
+
+    confirmButton.disabled = false;
+    confirmButton.textContent = "Remove";
+
+  }
+
+});
+
+
+/* 16. CLOSE DIALOG ON BACKDROP */
+
+removeDialog.addEventListener("click", event => {
+
+  if (event.target === removeDialog) {
+
+    selectedFriend = null;
+
+    removeDialog.classList.remove("show");
+
+  }
+
+});
+
+
+/* 17. CLEANUP */
+
+window.addEventListener("beforeunload", stopFriendListener);
+
+</script>
+
+</body>
+</html>
