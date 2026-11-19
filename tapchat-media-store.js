@@ -1,40 +1,42 @@
-/*
- * TapChat media bridge:
- * 1. Upload files to Cloudinary.
- * 2. Keep the Cloudinary secure_url as the media URL.
- * 3. Optionally persist that URL and metadata to Firestore.
- */
+/* TapChat media bridge: upload files to Cloudinary and persist URLs/metadata in Firestore. */
 (function () {
   "use strict";
 
   let firestoreConfig = null;
 
   function setFirestore(config) {
-    if (!config) throw new Error("Firestore configuration is required.");
+    if (!config || !config.db || !config.doc || !config.setDoc) {
+      throw new Error("A valid Firestore configuration is required.");
+    }
     firestoreConfig = config;
+  }
+
+  function requireFirestore() {
+    if (!firestoreConfig) throw new Error("Firestore is not configured for TapChat media uploads.");
+    return firestoreConfig;
+  }
+
+  function requireUpload(upload) {
+    if (!upload || !upload.url || !upload.publicId) {
+      throw new Error("Cloudinary did not return a valid media URL and public ID.");
+    }
   }
 
   async function saveProfilePhoto(uid, upload) {
     if (!uid) throw new Error("A signed-in user uid is required.");
-    if (!firestoreConfig?.db || !firestoreConfig?.doc || !firestoreConfig?.setDoc) {
-      throw new Error("Firestore is not configured for TapChat media uploads.");
-    }
-
-    await firestoreConfig.setDoc(
-      firestoreConfig.doc(firestoreConfig.db, "users", uid),
-      {
-        photoURL: upload.url,
-        media: {
-          provider: "cloudinary",
-          publicId: upload.publicId,
-          resourceType: upload.resourceType,
-          format: upload.format,
-          bytes: upload.bytes
-        }
+    requireUpload(upload);
+    const config = requireFirestore();
+    await config.setDoc(config.doc(config.db, "users", uid), {
+      photoURL: upload.url,
+      media: {
+        provider: "cloudinary",
+        publicId: upload.publicId,
+        resourceType: upload.resourceType,
+        format: upload.format,
+        bytes: upload.bytes
       },
-      { merge: true }
-    );
-
+      updatedAt: config.serverTimestamp ? config.serverTimestamp() : new Date()
+    }, { merge: true });
     return upload.url;
   }
 
@@ -42,50 +44,30 @@
     if (!conversationId) throw new Error("A conversationId is required.");
     if (!messageId) throw new Error("A messageId is required.");
     if (!uid) throw new Error("A signed-in user uid is required.");
-    if (!firestoreConfig?.db || !firestoreConfig?.doc || !firestoreConfig?.setDoc) {
-      throw new Error("Firestore is not configured for TapChat media uploads.");
-    }
+    requireUpload(upload);
+    const config = requireFirestore();
+    const type = upload.resourceType === "video" ? "video"
+      : upload.resourceType === "audio" ? "audio" : "image";
+    const timestamp = config.serverTimestamp ? config.serverTimestamp() : new Date();
 
-    const messageRef = firestoreConfig.doc(
-      firestoreConfig.db,
-      "conversations",
-      conversationId,
-      "messages",
-      messageId
-    );
-
-    await firestoreConfig.setDoc(messageRef, {
+    await config.setDoc(config.doc(config.db, "conversations", conversationId, "messages", messageId), {
       senderId: uid,
       text,
-      type: upload.resourceType === "video"
-        ? "video"
-        : upload.resourceType === "audio"
-          ? "audio"
-          : "image",
+      type,
       mediaURL: upload.url,
       publicId: upload.publicId,
       resourceType: upload.resourceType,
       format: upload.format,
       bytes: upload.bytes,
       provider: "cloudinary",
-      createdAt: firestoreConfig.serverTimestamp
-        ? firestoreConfig.serverTimestamp()
-        : new Date()
+      createdAt: timestamp
     });
 
-    const conversationRef = firestoreConfig.doc(
-      firestoreConfig.db,
-      "conversations",
-      conversationId
-    );
-    await firestoreConfig.setDoc(conversationRef, {
-      lastMessage: text || `Shared ${upload.resourceType}`,
+    await config.setDoc(config.doc(config.db, "conversations", conversationId), {
+      lastMessage: text || `Shared ${type}`,
       lastMediaURL: upload.url,
-      updatedAt: firestoreConfig.serverTimestamp
-        ? firestoreConfig.serverTimestamp()
-        : new Date()
+      updatedAt: config.serverTimestamp ? config.serverTimestamp() : new Date()
     }, { merge: true });
-
     return upload.url;
   }
 
@@ -93,14 +75,14 @@
     if (!window.TapChatCloudinary) throw new Error("cloudinary-media.js must be loaded first.");
     const upload = await window.TapChatCloudinary.upload(file);
     await saveProfilePhoto(uid, upload);
-    localStorage.setItem("tapchatProfilePhoto", upload.url);
     return upload;
   }
 
-  async function uploadAndSaveChatMedia(file, { conversationId, messageId, uid, text = "" }) {
+  async function uploadAndSaveChatMedia(file, options) {
     if (!window.TapChatCloudinary) throw new Error("cloudinary-media.js must be loaded first.");
+    if (!options) throw new Error("Chat media options are required.");
     const upload = await window.TapChatCloudinary.upload(file);
-    await saveChatMedia(conversationId, messageId, uid, upload, text);
+    await saveChatMedia(options.conversationId, options.messageId, options.uid, upload, options.text || "");
     return upload;
   }
 
