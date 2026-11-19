@@ -261,6 +261,10 @@ body {
   font-size: 13px;
 }
 
+#birth-year {
+  grid-column: auto;
+}
+
 .dob-container select:focus {
   outline: none;
   border-color: rgba(89, 55, 34, 0.5);
@@ -403,8 +407,10 @@ body {
 
 @media (max-width: 480px) {
   .dob-container {
+    grid-template-columns: repeat(3, minmax(0, 82px));
+    justify-content: start;
     width: 100%;
-    max-width: 100%;
+    max-width: 256px;
     gap: 5px;
   }
 
@@ -435,11 +441,13 @@ body {
     width: 70%;
   }
 
-  .dob-container{
+  .dob-container {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    width: 100px;
+    grid-template-columns: repeat(3, minmax(0, 82px));
+    justify-content: start;
+    gap: 5px;
+    width: 100%;
+    max-width: 256px;
     min-width: 0;
   }
 
