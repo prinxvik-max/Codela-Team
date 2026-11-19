@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#805b3d">
+  <title>TapChat</title>
+  <link rel="icon" type="image/png" href="Log.png">
+  <link rel="stylesheet" href="user-profile.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="TapChat.html" aria-label="TapChat home">
+        <img src="Log.png" alt="" class="logo">
+        <span class="brand-name">Tap<span>Chat</span></span>
+      </a>
+
+      <div class="navigation-group">
+        <p class="nav-title">YOUR SPACE</p>
+        <nav class="navigation" aria-label="Main navigation">
+          <a href="discover-users.html"><span aria-hidden="true">⌕</span> Discover</a>
+          <a href="friend-requests.html"><span aria-hidden="true">♧</span> Friend Requests</a>
+          <a href="my-friends.html"><span aria-hidden="true">♙</span> My Friends</a>
+          <a class="active" href="chats.html"><span aria-hidden="true">▤</span> Chats</a>
+          <a href="settings.html"><span aria-hidden="true">⚙</span> Settings</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-account">
+        <label class="sidebar-avatar" for="sidebarPhotoInput" title="Change profile picture">
+          <img id="sidebarPhoto" src="" alt="">
+          <span id="sidebarInitials" aria-hidden="true">TC</span>
+          <span class="photo-edit" aria-hidden="true">✎</span>
+        </label>
+        <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/*">
+        <div class="sidebar-account-copy">
+          <strong>Your account</strong>
+          <span>View and edit profile</span>
+        </div>
+        <a class="sidebar-profile-link" href="settings.html#profile" aria-label="Open profile settings">›</a>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <a class="back-link" id="backToChat" href="chats.html" aria-label="Back to chats">← Back to chats</a>
+        <div class="user-chip">
+          <span class="user-avatar" aria-hidden="true">TC</span>
+          <span>Your account</span>
+        </div>
+      </header>
+
+      <section class="profile-layout" aria-labelledby="profileName">
+        <div class="profile-main">
+          <div class="profile-cover"></div>
+          <div class="profile-card">
+            <div class="profile-avatar avatar-one" id="profileAvatar" aria-hidden="true">AM</div>
+            <div class="profile-heading">
+              <div>
+                <div class="name-row">
+                  <h1 id="profileName">Alex Morgan</h1>
+                  <span class="online-badge" id="profilePresence"><span></span> Online</span>
+                </div>
+                <p class="username" id="profileUsername">@alexmorgan</p>
+              </div>
+            </div>
+
+            <p class="profile-bio" id="profileBio">
+              Photographer, weekend explorer, and always happy to plan the next trip.
+            </p>
+
+            <div class="profile-details">
+              <div><span>Location</span><strong id="profileLocation">Portland, Oregon</strong></div>
+              <div><span>Joined</span><strong id="profileJoined">March 2024</strong></div>
+              <div><span>Mutual friends</span><strong id="profileMutuals">12</strong></div>
+            </div>
+
+            <div class="profile-actions">
+              <a class="primary-action" id="messageUser" href="chats.html">Message</a>
+              <button class="secondary-action" id="addFriendButton" type="button">Add friend</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="profile-summary" aria-label="Shared details">
+          <h2>About</h2>
+          <dl>
+            <div><dt>Status</dt><dd id="profileStatus">Available</dd></div>
+            <div><dt>Relationship</dt><dd id="profileRelation">Friend</dd></div>
+            <div><dt>Shared groups</dt><dd id="profileGroups">2 groups</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script>
+    const profiles = {
+      alex: { name: "Alex Morgan", initials: "AM", username: "@alexmorgan", avatar: "avatar-one", online: true, bio: "Photographer, weekend explorer, and always happy to plan the next trip.", location: "Portland, Oregon", joined: "March 2024", mutuals: "12", status: "Available", relation: "Friend", groups: "2 groups" },
+      jordan: { name: "Jordan Davis", initials: "JD", username: "@jordandavis", avatar: "avatar-two", online: false, bio: "Music producer and amateur chef. Usually planning dinner while listening to a new album.", location: "Austin, Texas", joined: "January 2024", mutuals: "8", status: "Away", relation: "Friend", groups: "1 group" },
+      sam: { name: "Sam Kim", initials: "SK", username: "@samkim", avatar: "avatar-three", online: true, bio: "Designer, cyclist, and dedicated weekend coffee hunter.", location: "Seattle, Washington", joined: "August 2024", mutuals: "16", status: "Available", relation: "Friend", groups: "3 groups" },
+      riley: { name: "Riley Parker", initials: "RP", username: "@rileyparker", avatar: "avatar-four", online: false, bio: "Reader, traveler, and collector of very specific maps.", location: "Denver, Colorado", joined: "June 2024", mutuals: "5", status: "Offline", relation: "Friend", groups: "1 group" },
+      morgan: { name: "Morgan Taylor", initials: "MT", username: "@morgantaylor", avatar: "avatar-five", online: false, bio: "Community organizer focused on books, local events, and good conversations.", location: "Chicago, Illinois", joined: "November 2023", mutuals: "9", status: "Offline", relation: "Friend", groups: "2 groups" }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const chatId = params.get("chatId") || "alex";
+    const profile = profiles[chatId] || profiles.alex;
+
+    document.title = `${profile.name} | TapChat`;
+    document.getElementById("profileName").textContent = profile.name;
+    document.getElementById("profileUsername").textContent = profile.username;
+    document.getElementById("profileBio").textContent = profile.bio;
+    document.getElementById("profileLocation").textContent = profile.location;
+    document.getElementById("profileJoined").textContent = profile.joined;
+    document.getElementById("profileMutuals").textContent = profile.mutuals;
+    document.getElementById("profileStatus").textContent = profile.status;
+    document.getElementById("profileRelation").textContent = profile.relation;
+    document.getElementById("profileGroups").textContent = profile.groups;
+
+    const avatar = document.getElementById("profileAvatar");
+    avatar.textContent = profile.initials;
+    avatar.className = `profile-avatar ${profile.avatar}`;
+
+    const presence = document.getElementById("profilePresence");
+    presence.innerHTML = `<span></span> ${profile.online ? "Online" : "Offline"}`;
+    presence.classList.toggle("offline", !profile.online);
+
+    const chatUrl = `chats.html?chatId=${encodeURIComponent(chatId)}`;
+    document.getElementById("backToChat").href = chatUrl;
+    document.getElementById("messageUser").href = chatUrl;
+
+    const profilePhotoInput = document.getElementById("sidebarPhotoInput");
+    const profilePhoto = document.getElementById("sidebarPhoto");
+    const savedProfilePhoto = localStorage.getItem("tapchatProfilePhoto");
+    if (savedProfilePhoto) {
+      profilePhoto.src = savedProfilePhoto;
+      profilePhoto.hidden = false;
+    } else {
+      profilePhoto.hidden = true;
+    }
+
+    profilePhotoInput.addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        localStorage.setItem("tapchatProfilePhoto", reader.result);
+        profilePhoto.src = reader.result;
+        profilePhoto.hidden = false;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("addFriendButton").addEventListener("click", event => {
+      event.currentTarget.textContent = "Friend added";
+      event.currentTarget.disabled = true;
+      const toast = document.getElementById("toast");
+      toast.textContent = "Friend added successfully.";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2800);
+    });
+  </script>
+</body>
+</html>

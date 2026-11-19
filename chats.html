@@ -27,7 +27,19 @@
         </nav>
       </div>
 
-      <p class="sidebar-note">Keep in touch with the people who matter.</p>
+      <div class="sidebar-account">
+        <label class="sidebar-avatar" for="sidebarPhotoInput" title="Change profile picture">
+          <img id="sidebarPhoto" src="" alt="">
+          <span id="sidebarInitials" aria-hidden="true">TC</span>
+          <span class="photo-edit" aria-hidden="true">✎</span>
+        </label>
+        <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/*">
+        <div class="sidebar-account-copy">
+          <strong>Your account</strong>
+          <span>View and edit profile</span>
+        </div>
+        <a class="sidebar-profile-link" href="settings.html#profile" aria-label="Open profile settings">›</a>
+      </div>
     </aside>
 
     <main>
@@ -55,6 +67,20 @@
 
       <div class="chat-workspace">
         <section class="chat-panel" id="chatListPanel" aria-label="Recent conversations">
+          <div class="status-panel">
+            <div class="status-heading">
+              <div>
+                <p>My status</p>
+                <strong id="ownStatusText">Available</strong>
+              </div>
+              <button class="status-edit-button" id="toggleStatusForm" type="button">Edit</button>
+            </div>
+            <form class="status-form" id="statusForm">
+              <label class="sr-only" for="statusInput">Set your status</label>
+              <input id="statusInput" type="text" maxlength="60" placeholder="What's on your mind?">
+              <button type="submit">Save</button>
+            </form>
+          </div>
           <div class="list-heading">
             <h2>Recent</h2>
             <span id="chatCount">5 conversations</span>
@@ -67,7 +93,7 @@
             <button class="back-to-list" id="backToList" type="button" aria-label="Back to conversations">←</button>
             <span class="conversation-avatar" id="conversationAvatar" aria-hidden="true"></span>
             <div class="conversation-person">
-              <h2 id="conversationName">Choose a conversation</h2>
+              <h2><a id="conversationName" href="user-profile.html">Choose a conversation</a></h2>
               <p class="presence" id="conversationStatus">Select someone to see their status</p>
             </div>
             <div class="conversation-actions" aria-label="Call actions">
@@ -212,6 +238,36 @@
     let activeChatId = null;
     let toastTimer;
 
+    const sidebarPhotoInput = document.getElementById("sidebarPhotoInput");
+    const sidebarPhoto = document.getElementById("sidebarPhoto");
+
+    function loadSidebarProfile() {
+      const savedPhoto = localStorage.getItem("tapchatProfilePhoto");
+      if (savedPhoto) {
+        sidebarPhoto.src = savedPhoto;
+        sidebarPhoto.hidden = false;
+      } else {
+        sidebarPhoto.hidden = true;
+      }
+    }
+
+    sidebarPhotoInput.addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        showToast("Choose an image file for your profile picture.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        localStorage.setItem("tapchatProfilePhoto", reader.result);
+        sidebarPhoto.src = reader.result;
+        sidebarPhoto.hidden = false;
+        showToast("Profile picture updated.");
+      };
+      reader.readAsDataURL(file);
+    });
+
     function renderChatList() {
       chatList.innerHTML = chats.map(chat => `
         <button class="chat-item${chat.id === activeChatId ? " selected" : ""}" type="button" data-chat-id="${chat.id}" aria-pressed="${chat.id === activeChatId}">
@@ -250,6 +306,7 @@
       activeChatId = chat.id;
       chat.unread = 0;
       conversationName.textContent = chat.name;
+      conversationName.href = `user-profile.html?chatId=${encodeURIComponent(chat.id)}`;
       conversationStatus.innerHTML = chat.status === "online"
         ? '<span class="status-indicator online"></span>Online'
         : chat.status === "group"
@@ -387,8 +444,35 @@
       if (event.target === groupDialog) groupDialog.close();
     });
 
+    loadSidebarProfile();
+
+    const statusForm = document.getElementById("statusForm");
+    const statusInput = document.getElementById("statusInput");
+    const ownStatusText = document.getElementById("ownStatusText");
+    const savedStatus = localStorage.getItem("tapchatOwnStatus");
+    if (savedStatus) {
+      ownStatusText.textContent = savedStatus;
+      statusInput.value = savedStatus;
+    }
+
+    document.getElementById("toggleStatusForm").addEventListener("click", () => {
+      statusForm.classList.toggle("open");
+      if (statusForm.classList.contains("open")) statusInput.focus();
+    });
+
+    statusForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const status = statusInput.value.trim();
+      if (!status) return;
+      ownStatusText.textContent = status;
+      localStorage.setItem("tapchatOwnStatus", status);
+      statusForm.classList.remove("open");
+      showToast("Status updated.");
+    });
+
     renderChatList();
-    selectChat(chats[0].id);
+    const requestedChatId = new URLSearchParams(window.location.search).get("chatId");
+    selectChat(chats.some(chat => chat.id === requestedChatId) ? requestedChatId : chats[0].id);
   </script>
 </body>
 </html>

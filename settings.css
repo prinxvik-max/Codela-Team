@@ -44,8 +44,9 @@ a {
   flex-direction: column;
   gap: 34px;
   padding: 26px 18px;
-  border-right: 1px solid var(--border);
-  background: var(--surface);
+  border-right: 1px solid var(--brown-dark);
+  background: var(--brown-dark);
+  color: #fffaf4;
 }
 
 .brand {
@@ -68,10 +69,17 @@ a {
 }
 
 .brand-name span {
-  color: var(--brown);
+  color: #e8d4bf;
 }
 
-.nav-title,
+.nav-title {
+  margin: 0 12px 10px;
+  color: #d9cbbd;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
 .eyebrow {
   margin: 0;
   color: var(--muted);
@@ -96,7 +104,7 @@ a {
   gap: 11px;
   padding: 0 13px;
   border-radius: 12px;
-  color: #75695d;
+  color: #eadfd2;
   font-size: 14px;
   font-weight: 600;
   transition: background-color 160ms ease, color 160ms ease;
@@ -104,7 +112,7 @@ a {
 
 .navigation a span {
   width: 18px;
-  color: var(--brown);
+  color: #eadfd2;
   font-size: 18px;
   text-align: center;
 }
@@ -118,8 +126,8 @@ a {
 .sidebar-note {
   margin: auto 10px 0;
   padding-top: 18px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
+  border-top: 1px solid rgb(255 255 255 / 16%);
+  color: #d9cbbd;
   font-size: 12px;
   line-height: 1.6;
 }
@@ -455,6 +463,25 @@ h1 {
   font-size: 11px;
   line-height: 1.6;
 }
+
+.sidebar-account {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgb(255 255 255 / 16%);
+}
+.sidebar-avatar { position: relative; display: grid; width: 44px; height: 44px; place-items: center; border: 2px solid rgb(255 255 255 / 75%); border-radius: 50%; background: #eadfd2; color: var(--brown-dark); cursor: pointer; }
+.sidebar-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.sidebar-avatar img + span { position: absolute; }
+.photo-edit { position: absolute; right: -3px; bottom: -3px; display: grid; width: 18px; height: 18px; place-items: center; border: 2px solid var(--brown-dark); border-radius: 50%; background: #fffaf4; color: var(--brown-dark); font-size: 9px; }
+.photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.sidebar-account-copy { display: grid; min-width: 0; gap: 3px; }
+.sidebar-account-copy strong { font-size: 12px; }
+.sidebar-account-copy span { overflow: hidden; color: #d9cbbd; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-profile-link { color: #fff; font-size: 24px; }
 
 a:focus-visible,
 input:focus-visible,

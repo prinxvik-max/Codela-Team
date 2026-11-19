@@ -27,7 +27,19 @@
         </nav>
       </div>
 
-      <p class="sidebar-note">Make TapChat feel like yours.</p>
+      <div class="sidebar-account">
+        <label class="sidebar-avatar" for="sidebarPhotoInput" title="Change profile picture">
+          <img id="sidebarPhoto" src="" alt="">
+          <span id="sidebarInitials" aria-hidden="true">TC</span>
+          <span class="photo-edit" aria-hidden="true">✎</span>
+        </label>
+        <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/*">
+        <div class="sidebar-account-copy">
+          <strong>Your account</strong>
+          <span>View and edit profile</span>
+        </div>
+        <a class="sidebar-profile-link" href="#profile" aria-label="Open profile settings">›</a>
+      </div>
     </aside>
 
     <main>
@@ -180,5 +192,29 @@
       </div>
     </main>
   </div>
+  <script>
+    const photoInput = document.getElementById("sidebarPhotoInput");
+    const photo = document.getElementById("sidebarPhoto");
+
+    const savedPhoto = localStorage.getItem("tapchatProfilePhoto");
+    if (savedPhoto) {
+      photo.src = savedPhoto;
+      photo.hidden = false;
+    } else {
+      photo.hidden = true;
+    }
+
+    photoInput.addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        localStorage.setItem("tapchatProfilePhoto", reader.result);
+        photo.src = reader.result;
+        photo.hidden = false;
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
 </body>
 </html>

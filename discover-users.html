@@ -40,8 +40,9 @@ body {
 /* SIDEBAR */
 
 .sidebar {
-  background: var(--white);
-  border-right: 1px solid var(--border);
+  background: var(--dark-brown);
+  border-right: 1px solid var(--dark-brown);
+  color: #fffaf4;
   padding: 25px 18px;
   display: flex;
   flex-direction: column;
@@ -78,7 +79,7 @@ body {
   font-size: 10px;
   font-weight: bold;
   letter-spacing: 2px;
-  color: #a09181;
+  color: #d9cbbd;
   margin: 0 12px 10px;
 }
 
@@ -89,7 +90,7 @@ body {
 
 .navigation a {
   text-decoration: none;
-  color: #75695d;
+  color: #eadfd2;
   padding: 13px 14px;
   border-radius: 12px;
   font-size: 14px;
@@ -97,15 +98,15 @@ body {
 }
 
 .navigation a.active {
-  background: var(--soft);
-  color: var(--dark-brown);
+  background: rgb(255 255 255 / 14%);
+  color: #ffffff;
 }
 
 .sidebar-note {
   margin-top: auto;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgb(255 255 255 / 16%);
   padding: 18px 10px 0;
-  color: var(--muted);
+  color: #d9cbbd;
   font-size: 12px;
   line-height: 1.6;
 }
@@ -368,6 +369,25 @@ h1 {
   line-height: 1.6;
 }
 
+.sidebar-account {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgb(255 255 255 / 16%);
+}
+.sidebar-avatar { position: relative; display: grid; width: 44px; height: 44px; place-items: center; border: 2px solid rgb(255 255 255 / 75%); border-radius: 50%; background: #eadfd2; color: var(--dark-brown); cursor: pointer; }
+.sidebar-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.sidebar-avatar img + span { position: absolute; }
+.photo-edit { position: absolute; right: -3px; bottom: -3px; display: grid; width: 18px; height: 18px; place-items: center; border: 2px solid var(--dark-brown); border-radius: 50%; background: #fffaf4; color: var(--dark-brown); font-size: 9px; }
+.photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.sidebar-account-copy { display: grid; min-width: 0; gap: 3px; }
+.sidebar-account-copy strong { font-size: 12px; }
+.sidebar-account-copy span { overflow: hidden; color: #d9cbbd; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-profile-link { color: #fff; font-size: 24px; }
+
 /* TOAST MESSAGE */
 
 .toast {
@@ -489,11 +509,22 @@ h1 {
         <a href="friend-requests.html">♧ &nbsp; Friend Requests</a>
         <a href="my-friends.html">♙ &nbsp; My Friends</a>
         <a href="chats.html">▤ &nbsp; Chats</a>
+        <a href="settings.html">⚙ &nbsp; Settings</a>
       </nav>
     </div>
 
-    <div class="sidebar-note">
-      Find people, build friendships, and start conversations on TapChat.
+    <div class="sidebar-account">
+      <label class="sidebar-avatar" for="sidebarPhotoInput" title="Change profile picture">
+        <img id="sidebarPhoto" src="" alt="">
+        <span id="sidebarInitials" aria-hidden="true">TC</span>
+        <span class="photo-edit" aria-hidden="true">✎</span>
+      </label>
+      <input class="photo-input" id="sidebarPhotoInput" type="file" accept="image/*">
+      <div class="sidebar-account-copy">
+        <strong>Your account</strong>
+        <span>View and edit profile</span>
+      </div>
+      <a class="sidebar-profile-link" href="settings.html#profile" aria-label="Open profile settings">›</a>
     </div>
 
   </aside>
@@ -825,6 +856,27 @@ window.TapChatDiscover = {
   showToast
 
 };
+
+const discoverPhotoInput = document.getElementById("sidebarPhotoInput");
+const discoverPhoto = document.getElementById("sidebarPhoto");
+const savedDiscoverPhoto = localStorage.getItem("tapchatProfilePhoto");
+if (savedDiscoverPhoto) {
+  discoverPhoto.src = savedDiscoverPhoto;
+  discoverPhoto.hidden = false;
+} else {
+  discoverPhoto.hidden = true;
+}
+discoverPhotoInput.addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (!file || !file.type.startsWith("image/")) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    localStorage.setItem("tapchatProfilePhoto", reader.result);
+    discoverPhoto.src = reader.result;
+    discoverPhoto.hidden = false;
+  };
+  reader.readAsDataURL(file);
+});
 
 </script>
 
