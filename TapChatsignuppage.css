@@ -237,21 +237,28 @@ body {
 .dob-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  width: 100%;
+  gap: 8px;
+  width: min(100%, 360px);
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .dob-container select {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  min-height: 50px;
-  padding: 0 10px;
+  min-height: 46px;
+  padding: 0 8px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--surface-soft);
   color: var(--text);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font: inherit;
+  font-size: 13px;
 }
 
 .dob-container select:focus {
@@ -394,6 +401,22 @@ body {
   text-decoration: underline;
 }
 
+@media (max-width: 480px) {
+  .dob-container {
+    width: 100%;
+    max-width: 100%;
+    gap: 5px;
+  }
+
+  .dob-container select {
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 2px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 760px) {
   .loginContainer {
     grid-template-columns: 1fr;
@@ -410,6 +433,20 @@ body {
 
   .field-with-icon {
     width: 70%;
+  }
+
+  .dob-container{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100px;
+    min-width: 0;
+  }
+
+  .dob-container select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .login-button {
