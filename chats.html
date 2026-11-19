@@ -85,6 +85,14 @@
             <h2>Recent</h2>
             <span id="chatCount">5 conversations</span>
           </div>
+          <div class="chat-toolbar">
+            <div class="chat-search-wrapper">
+              <span class="chat-search-icon" aria-hidden="true">⌕</span>
+              <label class="sr-only" for="chatSearch">Search conversations</label>
+              <input class="chat-search-input" id="chatSearch" type="search" placeholder="Search conversations..." autocomplete="off">
+            </div>
+            <button class="clear-chat-search" id="clearChatSearch" type="button">Clear</button>
+          </div>
           <div class="chat-list" id="chatList"></div>
         </section>
 
@@ -269,7 +277,13 @@
     });
 
     function renderChatList() {
-      chatList.innerHTML = chats.map(chat => `
+      const query = document.getElementById("chatSearch").value.trim().toLowerCase();
+      const visibleChats = chats.filter(chat =>
+        chat.name.toLowerCase().includes(query) ||
+        (chat.preview || "").toLowerCase().includes(query)
+      );
+
+      chatList.innerHTML = visibleChats.length ? visibleChats.map(chat => `
         <button class="chat-item${chat.id === activeChatId ? " selected" : ""}" type="button" data-chat-id="${chat.id}" aria-pressed="${chat.id === activeChatId}">
           <span class="chat-avatar ${chat.avatar}" aria-hidden="true">${escapeHTML(chat.initials)}</span>
           <span class="chat-copy">
@@ -284,8 +298,10 @@
             </span>
           </span>
         </button>
-      `).join("");
-      const count = chats.length;
+      `).join("") : `
+        <div class="message-empty">No conversations match your search.</div>
+      `;
+      const count = visibleChats.length;
       document.getElementById("chatCount").textContent = `${count} ${count === 1 ? "conversation" : "conversations"}`;
     }
 
@@ -382,6 +398,14 @@
     chatList.addEventListener("click", event => {
       const button = event.target.closest("[data-chat-id]");
       if (button) selectChat(button.dataset.chatId);
+    });
+
+    document.getElementById("chatSearch").addEventListener("input", renderChatList);
+    document.getElementById("clearChatSearch").addEventListener("click", () => {
+      const chatSearch = document.getElementById("chatSearch");
+      chatSearch.value = "";
+      renderChatList();
+      chatSearch.focus();
     });
 
     messageForm.addEventListener("submit", event => {

@@ -38,8 +38,8 @@ a {
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 34px;
-  padding: 26px 18px;
+  gap: 30px;
+  padding: 25px 18px;
   border-right: 1px solid var(--brown-dark);
   background: var(--brown-dark);
   color: #fffaf4;
@@ -48,14 +48,16 @@ a {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 0 8px;
 }
 
 .logo {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f7f2e9;
   object-fit: contain;
 }
 
@@ -65,7 +67,7 @@ a {
 }
 
 .brand-name span {
-  color: #e8d4bf;
+  color: var(--brown);
 }
 
 .nav-title {
@@ -95,10 +97,9 @@ a {
 
 .navigation a {
   display: flex;
-  min-height: 44px;
   align-items: center;
   gap: 11px;
-  padding: 0 13px;
+  padding: 13px 14px;
   border-radius: 12px;
   color: #eadfd2;
   font-size: 14px;
@@ -129,10 +130,8 @@ a {
 }
 
 main {
-  width: min(100%, 1120px);
   min-width: 0;
-  margin: 0 auto;
-  padding: 34px clamp(22px, 5vw, 64px) 48px;
+  padding: 34px clamp(18px, 5vw, 64px) 50px;
 }
 
 .topbar {
@@ -140,7 +139,7 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  margin-bottom: 48px;
+  margin-bottom: 38px;
 }
 
 .breadcrumb {
@@ -183,7 +182,8 @@ main {
 }
 
 .page-heading {
-  margin-bottom: 28px;
+  max-width: 760px;
+  margin-bottom: 26px;
 }
 
 .eyebrow {
@@ -199,7 +199,7 @@ main {
 }
 
 h1 {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   font-size: clamp(30px, 4vw, 40px);
   letter-spacing: -0.045em;
 }
@@ -207,8 +207,9 @@ h1 {
 .subtitle {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
+  max-width: 620px;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .new-chat {
@@ -385,7 +386,7 @@ a:focus-visible {
   }
 
   .sidebar {
-    gap: 14px;
+    gap: 12px;
     padding: 13px 16px 12px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
@@ -396,8 +397,8 @@ a:focus-visible {
   }
 
   .logo {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
   }
 
   .brand-name {
@@ -421,10 +422,10 @@ a:focus-visible {
   }
 
   .navigation a {
-    min-height: 39px;
+    min-height: 36px;
     flex: 0 0 auto;
     gap: 7px;
-    padding: 0 11px;
+    padding: 10px 12px;
     font-size: 12px;
   }
 
@@ -474,6 +475,11 @@ a:focus-visible {
 
   .list-heading {
     padding: 18px 16px 13px;
+  }
+
+  .chat-toolbar {
+    padding-right: 8px;
+    padding-left: 8px;
   }
 
   .chat-list {
@@ -650,6 +656,63 @@ a:focus-visible {
 
 .list-heading {
   padding: 18px 18px 14px;
+}
+
+.chat-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 0 10px 14px;
+}
+
+.chat-search-wrapper {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+}
+
+.chat-search-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9a8c7d;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.chat-search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px 0 38px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.chat-search-input:focus {
+  border-color: var(--brown);
+  box-shadow: 0 0 0 3px rgba(89, 55, 34, 0.12);
+}
+
+.clear-chat-search {
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: #6f6255;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.clear-chat-search:hover {
+  background: var(--soft);
 }
 
 .chat-list {
