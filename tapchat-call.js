@@ -12,7 +12,7 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-const rtcConfiguration = {
+const defaultRtcConfiguration = {
   iceServers: [
     { urls: "stun:stun.l.google.com:19302" },
     ...(Array.isArray(window.TAPCHAT_ICE_SERVERS) ? window.TAPCHAT_ICE_SERVERS : [])
@@ -62,10 +62,49 @@ export function createCallManager() {
   const cameraButton = dialog.querySelector(".tapchat-call-camera");
   let user = auth.currentUser;
   let callsUnsubscribe = null;
+  let rtcConfiguration = defaultRtcConfiguration;
   let call = null;
   let callSetupInProgress = false;
   let acceptingCall = false;
   const incomingCallIds = new Set();
+
+  async function refreshRtcConfiguration() {
+    const endpoint = window.TAPCHAT_ICE_CONFIG_URL;
+    if (!endpoint) {
+      rtcConfiguration = defaultRtcConfiguration;
+      return;
+    }
+
+    const endpointUrl = new URL(endpoint, window.location.href);
+    const localHosts = new Set(["localhost", "127.0.0.1", "[::1]"]);
+    if (endpointUrl.protocol !== "https:" && !localHosts.has(endpointUrl.hostname)) {
+      throw new Error("The ICE credential endpoint must use HTTPS.");
+    }
+
+    const idToken = await user.getIdToken();
+    const response = await fetch(endpointUrl, {
+      headers: { Authorization: `Bearer ${idToken}` },
+      credentials: "omit"
+    });
+    if (!response.ok) {
+      throw new Error(`Could not load secure call network settings (${response.status}).`);
+    }
+
+    const settings = await response.json();
+    if (
+      !Array.isArray(settings.iceServers) ||
+      settings.iceServers.length === 0 ||
+      settings.iceServers.some(server =>
+        !server || !(typeof server.urls === "string" || Array.isArray(server.urls))
+      )
+    ) {
+      throw new Error("The ICE credential endpoint returned invalid server settings.");
+    }
+
+    rtcConfiguration = {
+      iceServers: [...defaultRtcConfiguration.iceServers, ...settings.iceServers]
+    };
+  }
 
   function showError(message) {
     error.textContent = message;
@@ -162,6 +201,8 @@ export function createCallManager() {
 
   function makePeerConnection(peerUid, peerRef, isOfferer) {
     const peerConnection = new RTCPeerConnection(rtcConfiguration);
+    const pendingCandidates = [];
+    let candidatesReady = !isOfferer;
     call.peerConnections.set(peerUid, peerConnection);
     for (const track of call.localStream.getTracks()) {
       peerConnection.addTrack(track, call.localStream);
@@ -183,7 +224,18 @@ export function createCallManager() {
     };
     const outgoingCandidates = collection(peerRef, isOfferer ? "callerCandidates" : "calleeCandidates");
     peerConnection.onicecandidate = event => {
-      if (event.candidate) appendCandidate(outgoingCandidates, event.candidate).catch(showError);
+      if (!event.candidate) return;
+      if (!candidatesReady) {
+        pendingCandidates.push(event.candidate);
+        return;
+      }
+      appendCandidate(outgoingCandidates, event.candidate).catch(showError);
+    };
+    peerConnection.tapchatFlushCandidates = () => {
+      candidatesReady = true;
+      while (pendingCandidates.length) {
+        appendCandidate(outgoingCandidates, pendingCandidates.shift()).catch(showError);
+      }
     };
     return peerConnection;
   }
@@ -199,6 +251,7 @@ export function createCallManager() {
       offer: { type: offer.type, sdp: offer.sdp },
       createdAt: serverTimestamp()
     }, { merge: true });
+    peerConnection.tapchatFlushCandidates();
 
     const answerUnsubscribe = onSnapshot(peerRef, async snapshot => {
       const answer = snapshot.data()?.answer;
@@ -350,11 +403,20 @@ export function createCallManager() {
       dialog.showModal();
       return;
     }
+    if (members.length > 6) {
+      showError("Group calls support up to six participants.");
+      dialog.showModal();
+      return;
+    }
 
     let stream;
     let callRef;
     callSetupInProgress = true;
     try {
+      await refreshRtcConfiguration();
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("Calls require camera/microphone access on a secure HTTPS page.");
+      }
       stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: type === "video"
@@ -404,6 +466,7 @@ export function createCallManager() {
         throw new Error("This call has already ended.");
       }
       const details = callSnapshot.data();
+      await refreshRtcConfiguration();
       stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: details.type === "video"

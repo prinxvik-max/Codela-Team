@@ -186,7 +186,7 @@
 
     <script type="module">
       import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-      import { doc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+      import { doc, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
       import { auth, db } from "./tapchat-firebase.js";
 
       const form = document.getElementById("signupform");
@@ -287,7 +287,7 @@
           const credential = await createUserWithEmailAndPassword(auth, email, passwordInput.value);
           accountCreated = true;
           await updateProfile(credential.user, { displayName: fullName });
-          await setDoc(doc(db, "users", credential.user.uid), {
+          const userProfile = {
             uid: credential.user.uid,
             fullName,
             displayName: fullName,
@@ -297,7 +297,19 @@
             username: fullName.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 30),
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
+          };
+          const batch = writeBatch(db);
+          batch.set(doc(db, "users", credential.user.uid), userProfile);
+          batch.set(doc(db, "publicProfiles", credential.user.uid), {
+            uid: credential.user.uid,
+            fullName,
+            displayName: fullName,
+            username: userProfile.username,
+            about: "",
+            photoURL: credential.user.photoURL || "",
+            updatedAt: serverTimestamp()
           });
+          await batch.commit();
           window.location.assign("settings.html");
         } catch (error) {
           console.error("TapChat signup failed:", error);

@@ -93,8 +93,9 @@
 
   async function saveProfilePhoto(uploaded) {
     const user = await requireUser();
-    const { doc, setDoc, serverTimestamp } = firebaseSdk.firestore;
-    await setDoc(doc(db, "users", user.uid), {
+    const { doc, writeBatch, serverTimestamp } = firebaseSdk.firestore;
+    const batch = writeBatch(db);
+    batch.set(doc(db, "users", user.uid), {
       photoURL: uploaded.url,
       photoPublicId: uploaded.publicId,
       photoResourceType: uploaded.resourceType,
@@ -103,6 +104,12 @@
       mediaProvider: "cloudinary",
       updatedAt: serverTimestamp()
     }, { merge: true });
+    batch.set(doc(db, "publicProfiles", user.uid), {
+      uid: user.uid,
+      photoURL: uploaded.url,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    await batch.commit();
     displayProfilePhoto(uploaded.url);
     return uploaded.url;
   }

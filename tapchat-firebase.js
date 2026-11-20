@@ -1,6 +1,6 @@
 import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWa9XkYkmmEpsqFdmSWIhArKt2Cj_8TSY",
@@ -16,3 +16,25 @@ export const app = getApps().find(item => item.options.projectId === firebaseCon
   || initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+onAuthStateChanged(auth, async user => {
+  if (!user) return;
+
+  try {
+    const profileSnapshot = await getDoc(doc(db, "users", user.uid));
+    if (!profileSnapshot.exists()) return;
+
+    const profile = profileSnapshot.data();
+    await setDoc(doc(db, "publicProfiles", user.uid), {
+      uid: user.uid,
+      fullName: profile.fullName || profile.displayName || user.displayName || "",
+      displayName: profile.displayName || user.displayName || "",
+      username: profile.username || "",
+      about: profile.about || "",
+      photoURL: profile.photoURL || user.photoURL || "",
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error("Could not sync public TapChat profile:", error);
+  }
+});

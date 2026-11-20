@@ -1112,7 +1112,8 @@ function formatDay(timestamp) {
 }
 
 async function getUserDetails(uid) {
-  const snap = await getDoc(doc(db, "users", uid));
+  const collectionName = uid === currentUser?.uid ? "users" : "publicProfiles";
+  const snap = await getDoc(doc(db, collectionName, uid));
 
   if (!snap.exists()) {
     return {
@@ -1502,17 +1503,24 @@ async function openConversation(friend) {
       Both users use the same deterministic ID.
     */
 
-    await setDoc(
-      conversationRef,
-      {
+    const conversationSnap = await getDoc(conversationRef);
+    if (!conversationSnap.exists()) {
+      await setDoc(conversationRef, {
         participants: [
           currentUser.uid,
           friend.friendId
         ].sort(),
         createdAt: serverTimestamp()
-      },
-      { merge: true }
-    );
+      });
+    } else {
+      const conversationParticipants = conversationSnap.data().participants || [];
+      if (
+        !conversationParticipants.includes(currentUser.uid) ||
+        !conversationParticipants.includes(friend.friendId)
+      ) {
+        throw new Error("Conversation membership verification failed.");
+      }
+    }
 
     setComposerEnabled(true);
 

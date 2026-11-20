@@ -26,7 +26,7 @@
     if (!uid) throw new Error("A signed-in user uid is required.");
     requireUpload(upload);
     const config = requireFirestore();
-    await config.setDoc(config.doc(config.db, "users", uid), {
+    const profileData = {
       photoURL: upload.url,
       media: {
         provider: "cloudinary",
@@ -36,7 +36,15 @@
         bytes: upload.bytes
       },
       updatedAt: config.serverTimestamp ? config.serverTimestamp() : new Date()
-    }, { merge: true });
+    };
+    await Promise.all([
+      config.setDoc(config.doc(config.db, "users", uid), profileData, { merge: true }),
+      config.setDoc(config.doc(config.db, "publicProfiles", uid), {
+        uid,
+        photoURL: upload.url,
+        updatedAt: profileData.updatedAt
+      }, { merge: true })
+    ]);
     return upload.url;
   }
 

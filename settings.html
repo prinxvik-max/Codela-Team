@@ -122,7 +122,7 @@
 
   <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import { doc, getDoc, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
     import { auth, db } from "./tapchat-firebase.js";
     const form = document.getElementById("profileSettingsForm");
     const accountEmail = document.getElementById("accountEmail");
@@ -161,7 +161,17 @@
         ...extra,
         updatedAt: serverTimestamp()
       };
-      await setDoc(doc(db, "users", currentUser.uid), data, { merge: true });
+      const batch = writeBatch(db);
+      batch.set(doc(db, "users", currentUser.uid), data, { merge: true });
+      batch.set(doc(db, "publicProfiles", currentUser.uid), {
+        uid: currentUser.uid,
+        fullName: data.displayName,
+        displayName: data.displayName,
+        username: data.username,
+        about: data.about,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      await batch.commit();
       return data;
     }
 

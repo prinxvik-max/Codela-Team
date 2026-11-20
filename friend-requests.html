@@ -790,7 +790,8 @@ function getFriendshipId(uid1, uid2) {
 }
 
 async function getUserDetails(uid) {
-  const userSnap = await getDoc(doc(db, "users", uid));
+  const collectionName = uid === currentUser?.uid ? "users" : "publicProfiles";
+  const userSnap = await getDoc(doc(db, collectionName, uid));
 
   if (!userSnap.exists()) {
     return {

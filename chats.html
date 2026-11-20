@@ -446,7 +446,7 @@
           const friends = await Promise.all(snapshot.docs.map(async friendshipDoc => {
             const friendId = friendshipDoc.data().participants?.find(id => id !== uid);
             if (!friendId) return null;
-            const profile = await getDoc(doc(db, "users", friendId));
+            const profile = await getDoc(doc(db, "publicProfiles", friendId));
             if (!profile.exists()) return null;
             return { friendId, ...profile.data() };
           }));
