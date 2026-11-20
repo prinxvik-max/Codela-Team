@@ -224,6 +224,10 @@ body {
 
 .field-with-icon input {
   flex: 1;
+  min-width: 0;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
   border: none;
   background: transparent;
   outline: none;
@@ -333,7 +337,7 @@ body {
   }
 
   .field-with-icon{
-    width: 70%;
+    width: 100%;
   }
 
   .login-button{
