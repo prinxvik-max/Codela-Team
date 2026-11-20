@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="tapchat-calls.css">
 <script src="cloudinary-media.js"></script>
 <script src="tapchat-page-media.js" defer></script>
 
@@ -381,6 +382,21 @@ button {cursor:pointer}
   border-radius:10px;
   background:#F0E5D8;
   color:var(--brown);
+}
+
+.header-icon.call-action {
+  border:0;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.header-icon.call-action:disabled {
+  cursor:not-allowed;
+  opacity:.45;
+}
+
+.header-icon.call-action:not(:disabled):hover {
+  background:#E4D4C2;
 }
 
 /* MESSAGES */
@@ -858,9 +874,17 @@ button {cursor:pointer}
             <span id="chatStatus">Select a friend to begin</span>
           </div>
 
-          <div class="header-icon">
+          <div class="header-icon" aria-hidden="true">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
+          <button class="header-icon call-action" id="voiceCallButton"
+            type="button" aria-label="Start voice chat" title="Voice chat" disabled>
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          </button>
+          <button class="header-icon call-action" id="videoCallButton"
+            type="button" aria-label="Start video call" title="Video call" disabled>
+            <i class="fa-solid fa-video" aria-hidden="true"></i>
+          </button>
 
         </header>
 
@@ -922,6 +946,7 @@ button {cursor:pointer}
 </div>
 
 <script type="module">
+import { createCallManager } from "./tapchat-call.js";
 
 /*
 =====================================================
@@ -995,6 +1020,27 @@ const messageInput = document.getElementById("messageInput");
 const messageForm = document.getElementById("messageForm");
 const sendButton = document.getElementById("sendButton");
 const statusBox = document.getElementById("statusMessage");
+const callManager = createCallManager();
+
+function startPrivateCall(type) {
+  if (!currentUser || !selectedFriend || !activeConversationId) return;
+  const friendName = selectedFriend.person.fullName || "Friend";
+  callManager.startCall({
+    type,
+    participantIds: [selectedFriend.friendId],
+    participantNames: {
+      [currentUser.uid]: currentUser.displayName || currentUser.email || "You",
+      [selectedFriend.friendId]: friendName
+    },
+    title: `${type === "audio" ? "Voice chat" : "Video call"} with ${friendName}`,
+    conversationId: activeConversationId
+  });
+}
+
+document.getElementById("voiceCallButton")
+  .addEventListener("click", () => startPrivateCall("audio"));
+document.getElementById("videoCallButton")
+  .addEventListener("click", () => startPrivateCall("video"));
 
 /* 5. HELPERS */
 
@@ -1100,6 +1146,8 @@ function stopListeners() {
 function setComposerEnabled(enabled) {
   messageInput.disabled = !enabled;
   sendButton.disabled = !enabled;
+  document.getElementById("voiceCallButton").disabled = !enabled;
+  document.getElementById("videoCallButton").disabled = !enabled;
   const attachmentButton = document.getElementById("tapchatMediaButton");
   if (attachmentButton) attachmentButton.disabled = !enabled;
 }
@@ -1111,6 +1159,7 @@ onAuthStateChanged(auth, async user => {
   stopListeners();
 
   currentUser = user;
+  callManager.setUser(user);
   friends = [];
   selectedFriend = null;
   activeConversationId = null;
@@ -1815,7 +1864,10 @@ document.getElementById("backButton")
 
 /* 18. CLEANUP */
 
-window.addEventListener("beforeunload", stopListeners);
+window.addEventListener("beforeunload", () => {
+  stopListeners();
+  callManager.close();
+});
 
 </script>
 

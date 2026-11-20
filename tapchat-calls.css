@@ -1,0 +1,157 @@
+.tapchat-call-dialog {
+  width: min(720px, calc(100vw - 28px));
+  max-width: none;
+  padding: 0;
+  border: 1px solid #e6ddd2;
+  border-radius: 20px;
+  background: #fffdf9;
+  color: #35281f;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+}
+
+.tapchat-call-dialog::backdrop {
+  background: rgba(32, 24, 18, .62);
+  backdrop-filter: blur(3px);
+}
+
+.tapchat-call-shell {
+  padding: 22px;
+}
+
+.tapchat-call-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.tapchat-call-header h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+}
+
+.tapchat-call-status {
+  margin: 0;
+  color: #796b5f;
+  font-size: 13px;
+}
+
+.tapchat-call-error {
+  margin: -6px 0 14px;
+  color: #a63e35;
+  font-size: 13px;
+}
+
+.tapchat-call-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  min-height: 120px;
+  margin-bottom: 18px;
+}
+
+.tapchat-call-tile {
+  position: relative;
+  display: grid;
+  min-height: 160px;
+  overflow: hidden;
+  place-items: center;
+  border-radius: 14px;
+  background: #302319;
+  color: #fff;
+}
+
+.tapchat-call-tile video {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  object-fit: cover;
+}
+
+.tapchat-call-tile audio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.tapchat-call-tile span {
+  position: absolute;
+  right: 9px;
+  bottom: 8px;
+  left: 9px;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 4px #000;
+  white-space: nowrap;
+}
+
+.tapchat-call-local {
+  min-height: 100px;
+}
+
+.tapchat-call-local video {
+  min-height: 100px;
+}
+
+.tapchat-call-controls,
+.tapchat-call-incoming {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tapchat-call-controls button,
+.tapchat-call-incoming button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #79563d;
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tapchat-call-controls button:hover,
+.tapchat-call-incoming button:hover {
+  background: #5f422e;
+}
+
+.tapchat-call-controls button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.tapchat-call-controls .tapchat-call-end,
+.tapchat-call-incoming .tapchat-call-decline {
+  background: #a63e35;
+}
+
+.tapchat-call-controls .tapchat-call-end:hover,
+.tapchat-call-incoming .tapchat-call-decline:hover {
+  background: #873128;
+}
+
+.tapchat-call-incoming {
+  justify-content: flex-end;
+}
+
+.tapchat-call-dialog[data-call-kind="audio"] .tapchat-call-media {
+  display: none;
+}
+
+@media (max-width: 520px) {
+  .tapchat-call-shell {
+    padding: 17px;
+  }
+
+  .tapchat-call-controls button,
+  .tapchat-call-incoming button {
+    flex: 1 1 120px;
+  }
+}

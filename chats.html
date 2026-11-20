@@ -7,6 +7,7 @@
   <title>TapChat</title>
   <link rel="icon" type="image/png" href="Log.png">
   <link rel="stylesheet" href="chats.css">
+  <link rel="stylesheet" href="tapchat-calls.css">
   <script src="cloudinary-media.js"></script>
   <script src="tapchat-page-media.js" defer></script>
 </head>
@@ -107,7 +108,7 @@
               <p class="presence" id="conversationStatus">Select someone to see their status</p>
             </div>
             <div class="conversation-actions" aria-label="Call actions">
-              <button class="icon-button" id="audioCallButton" type="button" aria-label="Start audio call" title="Audio call">
+              <button class="icon-button" id="audioCallButton" type="button" aria-label="Start voice chat" title="Voice chat">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M5 4h3l2 5-2 1.5a15 15 0 0 0 5.5 5.5L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"></path>
                 </svg>
@@ -138,7 +139,7 @@
           </div>
         </section>
       </div>
-      <p class="demo-note">This page is a front-end preview. Messages and groups are only saved in this browser session; connect a chat service for live conversations.</p>
+      <p class="demo-note">Demo private conversations are previews. Groups, group messages, and call signaling are saved in Firebase. Calls use peer-to-peer WebRTC; camera and microphone access and TURN servers may be required.</p>
     </main>
   </div>
 
@@ -154,11 +155,10 @@
       <label class="field-label" for="groupName">Group name</label>
       <input class="group-name-input" id="groupName" name="groupName" type="text" maxlength="40" placeholder="e.g. Weekend plans" required>
       <fieldset class="member-picker">
-        <legend>Add people <span>(optional)</span></legend>
-        <label><input type="checkbox" name="members" value="Alex Morgan"> Alex Morgan</label>
-        <label><input type="checkbox" name="members" value="Jordan Davis"> Jordan Davis</label>
-        <label><input type="checkbox" name="members" value="Sam Kim"> Sam Kim</label>
-        <label><input type="checkbox" name="members" value="Riley Parker"> Riley Parker</label>
+        <legend>Add people</legend>
+        <div id="groupMemberPicker" aria-live="polite">
+          <p>Sign in and add friends before creating a group.</p>
+        </div>
       </fieldset>
       <p class="form-message" id="groupFormMessage" aria-live="polite"></p>
       <div class="dialog-actions">
@@ -171,8 +171,21 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script type="module">
+    import { createCallManager } from "./tapchat-call.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { doc, getDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import {
+      addDoc,
+      collection,
+      doc,
+      getDoc,
+      onSnapshot,
+      orderBy,
+      query,
+      serverTimestamp,
+      setDoc,
+      where,
+      writeBatch
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
     import { auth, db } from "./tapchat-firebase.js";
 
     const chats = [
@@ -249,13 +262,27 @@
     const groupDialog = document.getElementById("groupDialog");
     const groupForm = document.getElementById("groupForm");
     const toast = document.getElementById("toast");
+    const callManager = createCallManager();
+    let groupChats = [];
+    let availableFriends = [];
+    let unsubscribeFriends = null;
+    let unsubscribeGroups = null;
+    let unsubscribeGroupMessages = null;
     let activeChatId = null;
     let toastTimer;
     let currentUser = null;
 
+    function allChats() {
+      return [...chats, ...groupChats];
+    }
+
+    function findChat(chatId) {
+      return allChats().find(item => item.id === chatId);
+    }
+
     function renderChatList() {
       const query = document.getElementById("chatSearch").value.trim().toLowerCase();
-      const visibleChats = chats.filter(chat =>
+      const visibleChats = allChats().filter(chat =>
         chat.name.toLowerCase().includes(query) ||
         (chat.preview || "").toLowerCase().includes(query)
       );
@@ -293,7 +320,7 @@
     }
 
     function selectChat(chatId) {
-      const chat = chats.find(item => item.id === chatId);
+      const chat = findChat(chatId);
       if (!chat) return;
 
       activeChatId = chat.id;
@@ -303,7 +330,7 @@
       conversationStatus.innerHTML = chat.status === "online"
         ? '<span class="status-indicator online"></span>Online'
         : chat.status === "group"
-          ? `${chat.memberNames.length} ${chat.memberNames.length === 1 ? "member" : "members"}`
+          ? `${chat.memberIds?.length || 0} ${chat.memberIds?.length === 1 ? "member" : "members"}`
           : `<span class="status-indicator"></span>${escapeHTML(chat.lastSeen || "Offline")}`;
       conversationAvatar.textContent = chat.initials;
       conversationAvatar.className = `conversation-avatar ${chat.avatar}`;
@@ -314,8 +341,14 @@
       conversationPanel.classList.add("has-chat");
       messageInput.disabled = false;
       messageForm.querySelector("button[type='submit']").disabled = false;
-      document.getElementById("audioCallButton").disabled = false;
-      document.getElementById("videoCallButton").disabled = false;
+      const canGroupCall = Boolean(
+        currentUser &&
+        chat.status === "group" &&
+        chat.memberIds?.some(uid => uid !== currentUser.uid)
+      );
+      document.getElementById("audioCallButton").disabled = !canGroupCall;
+      document.getElementById("videoCallButton").disabled = !canGroupCall;
+      watchGroupMessages(chat);
       if (window.matchMedia("(max-width: 760px)").matches) {
         chatListPanel.classList.add("mobile-hidden");
         conversationPanel.classList.add("mobile-visible");
@@ -334,6 +367,8 @@
       messageForm.querySelector("button[type='submit']").disabled = true;
       document.getElementById("audioCallButton").disabled = true;
       document.getElementById("videoCallButton").disabled = true;
+      unsubscribeGroupMessages?.();
+      unsubscribeGroupMessages = null;
       conversationPanel.classList.add("is-closed");
       document.querySelector(".chat-workspace").classList.add("chat-list-only");
       renderChatList();
@@ -346,6 +381,7 @@
         ? chat.messages.map(message => `
           <div class="message-row ${message.from === "you" ? "sent" : "received"}">
             <div class="message-bubble">
+              ${message.name ? `<strong>${escapeHTML(message.name)}</strong>` : ""}
               <p>${escapeHTML(message.text)}</p>
               <time>${escapeHTML(message.time)}</time>
             </div>
@@ -355,6 +391,119 @@
       messageHistory.scrollTop = messageHistory.scrollHeight;
     }
 
+    function watchGroupMessages(chat) {
+      unsubscribeGroupMessages?.();
+      unsubscribeGroupMessages = null;
+      if (chat.status !== "group" || !currentUser || !chat.groupId) {
+        renderMessages(chat);
+        return;
+      }
+
+      const messagesQuery = query(
+        collection(db, "groups", chat.groupId, "messages"),
+        orderBy("createdAt", "asc")
+      );
+      unsubscribeGroupMessages = onSnapshot(messagesQuery, snapshot => {
+        chat.messages = snapshot.docs.map(messageDoc => {
+          const message = messageDoc.data();
+          return {
+            text: message.text || "",
+            name: message.senderName || "Group member",
+            from: message.senderId === currentUser.uid ? "you" : "them",
+            time: message.createdAt?.toDate?.().toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit"
+            }) || "Now"
+          };
+        });
+        if (activeChatId === chat.id) renderMessages(chat);
+      }, error => {
+        console.error("Could not load group messages:", error);
+        showToast("Could not load group messages. Check Firestore access.");
+      });
+    }
+
+    function renderGroupMemberPicker() {
+      const memberPicker = document.getElementById("groupMemberPicker");
+      memberPicker.innerHTML = availableFriends.length
+        ? availableFriends.map(friend => `
+          <label>
+            <input type="checkbox" name="members" value="${escapeHTML(friend.friendId)}">
+            ${escapeHTML(friend.fullName || friend.username || "Friend")}
+          </label>
+        `).join("")
+        : "<p>Add confirmed friends before creating a group.</p>";
+    }
+
+    function listenForFriends(uid) {
+      unsubscribeFriends?.();
+      const friendshipsQuery = query(
+        collection(db, "friendships"),
+        where("participants", "array-contains", uid)
+      );
+      unsubscribeFriends = onSnapshot(friendshipsQuery, async snapshot => {
+        try {
+          const friends = await Promise.all(snapshot.docs.map(async friendshipDoc => {
+            const friendId = friendshipDoc.data().participants?.find(id => id !== uid);
+            if (!friendId) return null;
+            const profile = await getDoc(doc(db, "users", friendId));
+            if (!profile.exists()) return null;
+            return { friendId, ...profile.data() };
+          }));
+          if (currentUser?.uid !== uid) return;
+          availableFriends = friends.filter(Boolean);
+          renderGroupMemberPicker();
+        } catch (error) {
+          console.error("Could not load friends for group creation:", error);
+          showToast("Could not load your friends.");
+        }
+      }, error => {
+        console.error("Could not listen for friends:", error);
+        showToast("Could not load your friends. Check Firestore access.");
+      });
+    }
+
+    function listenForGroups(uid) {
+      unsubscribeGroups?.();
+      const groupsQuery = query(
+        collection(db, "groups"),
+        where("memberIds", "array-contains", uid)
+      );
+      unsubscribeGroups = onSnapshot(groupsQuery, snapshot => {
+        groupChats = snapshot.docs.map(groupDoc => {
+          const group = groupDoc.data();
+          const participants = Array.isArray(group.participants) ? group.participants : [];
+          const participantNames = Object.fromEntries(
+            participants.map(participant => [participant.uid, participant.name])
+          );
+          const name = group.name || "Group chat";
+          return {
+            id: groupDoc.id,
+            groupId: groupDoc.id,
+            name,
+            initials: name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "G",
+            avatar: "group-avatar",
+            status: "group",
+            memberIds: group.memberIds || [],
+            participantNames,
+            memberNames: participants.map(participant => participant.name),
+            preview: group.lastMessage || `${group.memberIds?.length || 0} members`,
+            time: "Group",
+            messages: []
+          };
+        });
+        renderChatList();
+        if (groupChats.some(group => group.id === activeChatId)) {
+          selectChat(activeChatId);
+        } else if (!findChat(activeChatId)) {
+          exitCurrentChat();
+        }
+      }, error => {
+        console.error("Could not listen for groups:", error);
+        showToast("Could not load groups. Check Firestore access.");
+      });
+    }
+
     function showToast(message) {
       toast.textContent = message;
       toast.classList.add("show");
@@ -362,13 +511,23 @@
       toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
     }
 
-    document.getElementById("audioCallButton").addEventListener("click", () => {
-      showToast("Audio calls will be available when a calling service is connected.");
-    });
+    function startGroupCall(type) {
+      const chat = findChat(activeChatId);
+      if (!currentUser || chat?.status !== "group") return;
+      callManager.startCall({
+        type,
+        participantIds: chat.memberIds,
+        participantNames: chat.participantNames,
+        title: `${type === "audio" ? "Voice chat" : "Video call"} · ${chat.name}`,
+        groupId: chat.groupId
+      });
+    }
 
-    document.getElementById("videoCallButton").addEventListener("click", () => {
-      showToast("Video calls will be available when a calling service is connected.");
-    });
+    document.getElementById("audioCallButton")
+      .addEventListener("click", () => startGroupCall("audio"));
+
+    document.getElementById("videoCallButton")
+      .addEventListener("click", () => startGroupCall("video"));
 
     document.getElementById("exitChatButton").addEventListener("click", exitCurrentChat);
 
@@ -388,8 +547,39 @@
     messageForm.addEventListener("submit", event => {
       event.preventDefault();
       const text = messageInput.value.trim();
-      const chat = chats.find(item => item.id === activeChatId);
+      const chat = findChat(activeChatId);
       if (!text || !chat) return;
+      if (chat.status === "group") {
+        if (!currentUser || !chat.groupId) {
+          showToast("Sign in to send group messages.");
+          return;
+        }
+        const senderName = chat.participantNames[currentUser.uid] ||
+          currentUser.displayName || "TapChat user";
+        const messageData = {
+          senderId: currentUser.uid,
+          senderName,
+          text,
+          createdAt: serverTimestamp()
+        };
+        const batch = writeBatch(db);
+        const messageRef = doc(collection(db, "groups", chat.groupId, "messages"));
+        batch.set(messageRef, messageData);
+        batch.set(doc(db, "groups", chat.groupId), {
+          lastMessage: text,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        batch.commit()
+          .then(() => {
+            messageInput.value = "";
+            messageInput.focus();
+          })
+          .catch(error => {
+            console.error("Could not send group message:", error);
+            showToast("Could not send the group message.");
+          });
+        return;
+      }
       chat.messages.push({ text, from: "you", time: "Now" });
       chat.preview = `You: ${text}`;
       chat.time = "Now";
@@ -417,24 +607,71 @@
         return;
       }
 
-      const members = [...groupForm.querySelectorAll('input[name="members"]:checked')].map(input => input.value);
-      const initials = name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
-      const group = {
-        id: `group-${Date.now()}`,
+      if (!currentUser) {
+        document.getElementById("groupFormMessage").textContent = "Sign in to create a group.";
+        return;
+      }
+
+      const selectedFriendIds = [...groupForm.querySelectorAll('input[name="members"]:checked')]
+        .map(input => input.value);
+      if (!selectedFriendIds.length) {
+        document.getElementById("groupFormMessage").textContent = "Choose at least one friend.";
+        return;
+      }
+
+      const participants = [
+        {
+          uid: currentUser.uid,
+          name: currentUser.displayName || "TapChat user"
+        },
+        ...selectedFriendIds.map(friendId => {
+          const friend = availableFriends.find(item => item.friendId === friendId);
+          return {
+            uid: friendId,
+            name: friend?.fullName || friend?.username || "Friend"
+          };
+        })
+      ];
+      const groupData = {
         name,
-        initials: initials || "G",
-        avatar: "group-avatar",
-        status: "group",
-        memberNames: members,
-        preview: members.length ? `Group · ${members.length} ${members.length === 1 ? "member" : "members"}` : "New group",
-        time: "Now",
-        messages: []
+        memberIds: participants.map(participant => participant.uid),
+        participants,
+        createdBy: currentUser.uid,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       };
-      chats.unshift(group);
-      groupDialog.close();
-      renderChatList();
-      selectChat(group.id);
-      showToast("Group created in this preview.");
+      const submitButton = groupForm.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      addDoc(collection(db, "groups"), groupData)
+        .then(groupRef => {
+          const initials = name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+          const group = {
+            id: groupRef.id,
+            groupId: groupRef.id,
+            name,
+            initials: initials || "G",
+            avatar: "group-avatar",
+            status: "group",
+            memberIds: groupData.memberIds,
+            participantNames: Object.fromEntries(participants.map(participant => [participant.uid, participant.name])),
+            memberNames: participants.map(participant => participant.name),
+            preview: `${participants.length} members`,
+            time: "Now",
+            messages: []
+          };
+          groupChats = [group, ...groupChats.filter(item => item.id !== group.id)];
+          groupDialog.close();
+          renderChatList();
+          selectChat(group.id);
+          showToast("Group created and saved.");
+        })
+        .catch(error => {
+          console.error("Could not create group:", error);
+          document.getElementById("groupFormMessage").textContent = "Could not create the group. Check Firestore access.";
+        })
+        .finally(() => {
+          submitButton.disabled = false;
+        });
     });
 
     document.getElementById("backToList").addEventListener("click", () => {
@@ -479,8 +716,24 @@
     });
 
     onAuthStateChanged(auth, async user => {
+      const hadGroupSelected = findChat(activeChatId)?.status === "group";
       currentUser = user;
+      callManager.setUser(user);
+      unsubscribeFriends?.();
+      unsubscribeGroups?.();
+      unsubscribeGroupMessages?.();
+      unsubscribeFriends = null;
+      unsubscribeGroups = null;
+      unsubscribeGroupMessages = null;
+      availableFriends = [];
+      groupChats = [];
+      renderGroupMemberPicker();
+      renderChatList();
+      if (hadGroupSelected) exitCurrentChat();
       if (!user) return;
+
+      listenForFriends(user.uid);
+      listenForGroups(user.uid);
 
       try {
         const snapshot = await getDoc(doc(db, "users", user.uid));
@@ -499,7 +752,13 @@
 
     renderChatList();
     const requestedChatId = new URLSearchParams(window.location.search).get("chatId");
-    selectChat(chats.some(chat => chat.id === requestedChatId) ? requestedChatId : chats[0].id);
+    selectChat(findChat(requestedChatId) ? requestedChatId : chats[0].id);
+    window.addEventListener("beforeunload", () => {
+      unsubscribeFriends?.();
+      unsubscribeGroups?.();
+      unsubscribeGroupMessages?.();
+      callManager.close();
+    });
   </script>
 </body>
 </html>

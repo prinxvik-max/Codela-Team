@@ -306,6 +306,11 @@ body {
 }
 
 .signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: 28px;
   text-align: center;
   font-size: 13px;
@@ -340,10 +345,6 @@ body {
     width: 100%;
   }
 
-  .login-button{
-    width: 70%;
-  }
-
 .welcome-content h1 {
   color: white;
 }
@@ -354,11 +355,6 @@ body {
 
 .welcome-content p {
   color: white;
-}
-
-.signup{
-  display: flex;
-
 }
 
 }
