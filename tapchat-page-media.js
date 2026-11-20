@@ -119,9 +119,8 @@
     return null;
   }
 
-  async function saveChatMedia(uploaded, caption = "") {
+  async function saveChatMedia(uploaded, caption = "", conversationId = getActiveConversationId()) {
     const user = await requireUser();
-    const conversationId = getActiveConversationId();
     if (!conversationId) throw new Error("Select a private conversation before attaching media.");
     const { collection, doc, setDoc, serverTimestamp } = firebaseSdk.firestore;
     const messageRef = doc(collection(db, "conversations", conversationId, "messages"));
@@ -203,10 +202,11 @@
     const button = document.createElement("button");
     button.type = "button";
     button.id = "tapchatMediaButton";
-    button.textContent = "📎";
+    button.className = "attachment-button";
+    button.textContent = "+";
     button.title = "Attach image, video, or audio";
     button.setAttribute("aria-label", button.title);
-    button.style.cssText = "border:0;background:transparent;font-size:18px;padding:8px;cursor:pointer";
+    button.disabled = Boolean(document.getElementById("messageInput")?.disabled);
     const picker = document.createElement("input");
     picker.type = "file";
     picker.id = "tapchatMediaInput";
@@ -220,10 +220,12 @@
       if (!file) return;
       const textInput = document.getElementById("messageInput");
       const caption = textInput && textInput.value ? textInput.value.trim() : "";
+      const conversationId = getActiveConversationId();
       try {
+        if (!conversationId) throw new Error("Select a private conversation before attaching media.");
         toast("Uploading media to Cloudinary...");
         const uploaded = await upload(file);
-        await saveChatMedia(uploaded, caption);
+        await saveChatMedia(uploaded, caption, conversationId);
         if (textInput) textInput.value = "";
         toast("Media URL saved to Firestore.");
       } catch (error) {

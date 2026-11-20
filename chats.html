@@ -170,7 +170,11 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script>
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import { doc, getDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import { auth, db } from "./tapchat-firebase.js";
+
     const chats = [
       {
         id: "alex",
@@ -247,6 +251,7 @@
     const toast = document.getElementById("toast");
     let activeChatId = null;
     let toastTimer;
+    let currentUser = null;
 
     function renderChatList() {
       const query = document.getElementById("chatSearch").value.trim().toLowerCase();
@@ -443,11 +448,6 @@
     const statusForm = document.getElementById("statusForm");
     const statusInput = document.getElementById("statusInput");
     const ownStatusText = document.getElementById("ownStatusText");
-    const savedStatus = localStorage.getItem("tapchatOwnStatus");
-    if (savedStatus) {
-      ownStatusText.textContent = savedStatus;
-      statusInput.value = savedStatus;
-    }
 
     document.getElementById("toggleStatusForm").addEventListener("click", () => {
       statusForm.classList.toggle("open");
@@ -458,10 +458,43 @@
       event.preventDefault();
       const status = statusInput.value.trim();
       if (!status) return;
-      ownStatusText.textContent = status;
-      localStorage.setItem("tapchatOwnStatus", status);
-      statusForm.classList.remove("open");
-      showToast("Status updated.");
+      if (!currentUser) {
+        showToast("Sign in to update your status.");
+        return;
+      }
+
+      setDoc(doc(db, "users", currentUser.uid), {
+        status,
+        updatedAt: serverTimestamp()
+      }, { merge: true })
+        .then(() => {
+          ownStatusText.textContent = status;
+          statusForm.classList.remove("open");
+          showToast("Status updated.");
+        })
+        .catch(error => {
+          console.error("Could not save status:", error);
+          showToast("Could not save your status. Please try again.");
+        });
+    });
+
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      if (!user) return;
+
+      try {
+        const snapshot = await getDoc(doc(db, "users", user.uid));
+        if (currentUser?.uid !== user.uid || !snapshot.exists()) return;
+
+        const status = snapshot.data().status;
+        if (typeof status === "string") {
+          ownStatusText.textContent = status;
+          statusInput.value = status;
+        }
+      } catch (error) {
+        console.error("Could not load status:", error);
+        showToast("Could not load your status.");
+      }
     });
 
     renderChatList();

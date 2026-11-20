@@ -567,6 +567,34 @@ button {cursor:pointer}
   color:#A8998A;
 }
 
+.attachment-button {
+  width:39px;
+  height:39px;
+  flex-shrink:0;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  color:var(--brown);
+  font-size:26px;
+  font-weight:500;
+  line-height:1;
+  transition:.2s;
+}
+
+.attachment-button:hover {
+  background:#EDE3D6;
+}
+
+.attachment-button:focus-visible {
+  outline:2px solid var(--brown);
+  outline-offset:2px;
+}
+
+.attachment-button:disabled {
+  opacity:.45;
+  cursor:not-allowed;
+}
+
 .send-button {
   width:39px;
   height:39px;
@@ -1072,6 +1100,8 @@ function stopListeners() {
 function setComposerEnabled(enabled) {
   messageInput.disabled = !enabled;
   sendButton.disabled = !enabled;
+  const attachmentButton = document.getElementById("tapchatMediaButton");
+  if (attachmentButton) attachmentButton.disabled = !enabled;
 }
 
 /* 6. AUTHENTICATION */
