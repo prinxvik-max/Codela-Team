@@ -7,6 +7,8 @@
   <title>TapChat</title>
   <link rel="icon" type="image/png" href="Log.png">
   <link rel="stylesheet" href="chats.css">
+  <script src="cloudinary-media.js"></script>
+  <script src="tapchat-page-media.js" defer></script>
 </head>
 <body>
   <div class="app">
@@ -246,36 +248,6 @@
     let activeChatId = null;
     let toastTimer;
 
-    const sidebarPhotoInput = document.getElementById("sidebarPhotoInput");
-    const sidebarPhoto = document.getElementById("sidebarPhoto");
-
-    function loadSidebarProfile() {
-      const savedPhoto = localStorage.getItem("tapchatProfilePhoto");
-      if (savedPhoto) {
-        sidebarPhoto.src = savedPhoto;
-        sidebarPhoto.hidden = false;
-      } else {
-        sidebarPhoto.hidden = true;
-      }
-    }
-
-    sidebarPhotoInput.addEventListener("change", event => {
-      const file = event.target.files[0];
-      if (!file) return;
-      if (!file.type.startsWith("image/")) {
-        showToast("Choose an image file for your profile picture.");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
-        localStorage.setItem("tapchatProfilePhoto", reader.result);
-        sidebarPhoto.src = reader.result;
-        sidebarPhoto.hidden = false;
-        showToast("Profile picture updated.");
-      };
-      reader.readAsDataURL(file);
-    });
-
     function renderChatList() {
       const query = document.getElementById("chatSearch").value.trim().toLowerCase();
       const visibleChats = chats.filter(chat =>
@@ -467,8 +439,6 @@
     groupDialog.addEventListener("click", event => {
       if (event.target === groupDialog) groupDialog.close();
     });
-
-    loadSidebarProfile();
 
     const statusForm = document.getElementById("statusForm");
     const statusInput = document.getElementById("statusInput");

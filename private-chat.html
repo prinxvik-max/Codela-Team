@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="cloudinary-media.js"></script>
+<script src="tapchat-page-media.js" defer></script>
 
 <style>
 :root {
@@ -855,7 +857,7 @@ button {cursor:pointer}
 
         <div class="composer">
 
-          <form class="composer-form" id="messageForm">
+          <form class="composer-form" id="messageForm" data-tapchat-chat-media>
 
             <textarea
               id="messageInput"
@@ -926,16 +928,12 @@ This must match the My Friends page.
 
 /* 1. FIREBASE IMPORTS */
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-
 import {
-  getAuth,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { auth, db } from "./tapchat-firebase.js";
 
 import {
-  getFirestore,
   collection,
   doc,
   getDoc,
@@ -950,24 +948,7 @@ import {
   writeBatch
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-/* 2. FIREBASE CONFIGURATION */
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-/* 3. INITIALIZE FIREBASE */
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-/* 4. PAGE VARIABLES */
+/* 2. PAGE VARIABLES */
 
 let currentUser = null;
 let friends = [];
@@ -1103,6 +1084,7 @@ onAuthStateChanged(auth, async user => {
   friends = [];
   selectedFriend = null;
   activeConversationId = null;
+  window.tapchatConversationId = null;
 
   setComposerEnabled(false);
 
@@ -1370,6 +1352,7 @@ async function openConversation(friend) {
     currentUser.uid,
     friend.friendId
   );
+  window.tapchatConversationId = activeConversationId;
 
   renderContacts();
 
@@ -1592,6 +1575,14 @@ function renderMessages(messages) {
     const statusIcon = mine
       ? '<i class="fa-solid fa-check pending-icon"></i>'
       : "";
+    const mediaUrl = message.mediaURL ? escapeHTML(message.mediaURL) : "";
+    const media = message.type === "video" && mediaUrl
+      ? `<video controls preload="metadata" src="${mediaUrl}" style="display:block;max-width:min(360px,100%);border-radius:12px"></video>`
+      : message.type === "audio" && mediaUrl
+        ? `<audio controls preload="metadata" src="${mediaUrl}"></audio>`
+        : message.type === "image" && mediaUrl
+          ? `<img src="${mediaUrl}" alt="Shared image" style="display:block;max-width:min(360px,100%);border-radius:12px">`
+          : "";
 
     return `
 
@@ -1605,7 +1596,7 @@ function renderMessages(messages) {
 
         <div class="message-content">
 
-          <div class="message-bubble">${escapeHTML(message.text || "")}</div>
+          <div class="message-bubble">${escapeHTML(message.text || "")}${media}</div>
 
           <div class="message-meta">
             ${formatTime(message.createdAt)}
@@ -1747,6 +1738,7 @@ function closeConversation() {
 
   selectedFriend = null;
   activeConversationId = null;
+  window.tapchatConversationId = null;
 
   if (unsubscribeMessages) {
     unsubscribeMessages();

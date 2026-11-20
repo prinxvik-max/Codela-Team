@@ -33,7 +33,7 @@
           <p class="eyebrow">Account access</p>
           <h2>Forgot password?</h2>
           <p class="description">
-            Enter your email address and we’ll send you a code to reset your
+            Enter your email address and we’ll send you a link to reset your
             password.
           </p>
 
@@ -58,7 +58,7 @@
               </div>
             </div>
 
-            <button type="submit" class="login-button">Send code →</button>
+            <button type="submit" class="login-button">Send reset link →</button>
             <p id="message" class="message" aria-live="polite"></p>
           </form>
 
@@ -69,12 +69,16 @@
       </section>
     </main>
 
-    <script>
+    <script type="module">
+      import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+      import { auth } from "./tapchat-firebase.js";
+
       const form = document.getElementById("resetform");
       const emailInput = document.getElementById("email");
       const message = document.getElementById("message");
+      const submitButton = form.querySelector('button[type="submit"]');
 
-      form.addEventListener("submit", (event) => {
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         if (!emailInput.validity.valid) {
@@ -82,9 +86,24 @@
           return;
         }
 
-        message.textContent =
-          "If an account exists for this email, you’ll receive a reset link.";
         message.classList.remove("error");
+        message.textContent = "Sending password reset email...";
+        submitButton.disabled = true;
+
+        try {
+          await sendPasswordResetEmail(auth, emailInput.value.trim());
+          message.textContent = "If an account exists for this email, you’ll receive a password reset link.";
+        } catch (error) {
+          console.error("TapChat password reset failed:", error);
+          if (error.code === "auth/user-not-found") {
+            message.textContent = "If an account exists for this email, you’ll receive a password reset link.";
+          } else {
+            message.classList.add("error");
+            message.textContent = error.message || "Could not send the reset email. Please try again.";
+          }
+        } finally {
+          submitButton.disabled = false;
+        }
       });
     </script>
   </body>

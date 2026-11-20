@@ -70,9 +70,7 @@
                 </span>
                 <input
                   id="password"
-                  maxlength="8"
                   name="password"
-                  maxlength="8"
                   type="password"
                   placeholder="Enter your password"
                   autocomplete="current-password"
@@ -106,11 +104,15 @@
       </section>
     </main>
 
-    <script>
+    <script type="module">
+      import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+      import { auth } from "./tapchat-firebase.js";
+
       const togglePassword = document.getElementById("toggle-password");
       const passwordInput = document.getElementById("password");
       const form = document.getElementById("loginform");
       const message = document.getElementById("message");
+      const submitButton = form.querySelector('button[type="submit"]');
 
       togglePassword.addEventListener("click", () => {
         const isPassword = passwordInput.type === "password";
@@ -118,20 +120,34 @@
         togglePassword.textContent = isPassword ? "Hide" : "Show";
       });
 
-      form.addEventListener("submit", (event) => {
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
+        const email = document.getElementById("username").value.trim();
+        const password = passwordInput.value;
 
-        if (!username || !password) {
-          message.textContent = "Please enter your email and password.";
+        if (!form.reportValidity()) {
           message.classList.add("error");
           return;
         }
 
-        message.textContent = "Login successful!";
         message.classList.remove("error");
+        message.textContent = "Signing in...";
+        submitButton.disabled = true;
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          window.location.assign("chats.html");
+        } catch (error) {
+          console.error("TapChat login failed:", error);
+          message.classList.add("error");
+          message.textContent = error.code === "auth/invalid-credential"
+            || error.code === "auth/user-not-found"
+            || error.code === "auth/wrong-password"
+            ? "Email or password is incorrect."
+            : error.message || "Sign in failed. Please try again.";
+          submitButton.disabled = false;
+        }
       });
     </script>
   </body>

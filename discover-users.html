@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="Log.png">
+<script src="cloudinary-media.js"></script>
+<script src="tapchat-page-media.js" defer></script>
 <title>TapChat</title>
 
 <style>
@@ -856,27 +858,6 @@ window.TapChatDiscover = {
   showToast
 
 };
-
-const discoverPhotoInput = document.getElementById("sidebarPhotoInput");
-const discoverPhoto = document.getElementById("sidebarPhoto");
-const savedDiscoverPhoto = localStorage.getItem("tapchatProfilePhoto");
-if (savedDiscoverPhoto) {
-  discoverPhoto.src = savedDiscoverPhoto;
-  discoverPhoto.hidden = false;
-} else {
-  discoverPhoto.hidden = true;
-}
-discoverPhotoInput.addEventListener("change", event => {
-  const file = event.target.files[0];
-  if (!file || !file.type.startsWith("image/")) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    localStorage.setItem("tapchatProfilePhoto", reader.result);
-    discoverPhoto.src = reader.result;
-    discoverPhoto.hidden = false;
-  };
-  reader.readAsDataURL(file);
-});
 
 </script>
 

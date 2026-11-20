@@ -7,6 +7,8 @@
   <title>TapChat</title>
   <link rel="icon" type="image/png" href="Log.png">
   <link rel="stylesheet" href="user-profile.css">
+  <script src="cloudinary-media.js"></script>
+  <script src="tapchat-page-media.js" defer></script>
 </head>
 <body>
   <div class="app">
@@ -132,28 +134,6 @@
     const chatUrl = `chats.html?chatId=${encodeURIComponent(chatId)}`;
     document.getElementById("backToChat").href = chatUrl;
     document.getElementById("messageUser").href = chatUrl;
-
-    const profilePhotoInput = document.getElementById("sidebarPhotoInput");
-    const profilePhoto = document.getElementById("sidebarPhoto");
-    const savedProfilePhoto = localStorage.getItem("tapchatProfilePhoto");
-    if (savedProfilePhoto) {
-      profilePhoto.src = savedProfilePhoto;
-      profilePhoto.hidden = false;
-    } else {
-      profilePhoto.hidden = true;
-    }
-
-    profilePhotoInput.addEventListener("change", event => {
-      const file = event.target.files[0];
-      if (!file || !file.type.startsWith("image/")) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        localStorage.setItem("tapchatProfilePhoto", reader.result);
-        profilePhoto.src = reader.result;
-        profilePhoto.hidden = false;
-      };
-      reader.readAsDataURL(file);
-    });
 
     document.getElementById("addFriendButton").addEventListener("click", event => {
       event.currentTarget.textContent = "Friend added";

@@ -2,15 +2,6 @@
 (function () {
   "use strict";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCWa9XkYkmmEpsqFdmSWIhArKt2Cj_8TSY",
-    authDomain: "tapchat-d77e7.firebaseapp.com",
-    projectId: "tapchat-d77e7",
-    storageBucket: "tapchat-d77e7.firebasestorage.app",
-    messagingSenderId: "309292071078",
-    appId: "1:309292071078:web:532d9cf0f8f7632f965c67",
-    measurementId: "G-D752JEHRC8"
-  };
   const allowedMedia = ".jpg,.jpeg,.png,.webp,.gif,.mp4,.mov,.webm,.mp3,.m4a,.wav,.ogg";
   const allowedImages = ".jpg,.jpeg,.png,.webp,.gif";
   let firebaseSdk;
@@ -38,17 +29,42 @@
   function initialize() {
     if (initPromise) return initPromise;
     initPromise = (async () => {
-      const appSdk = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js");
-      const authSdk = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js");
-      const firestore = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js");
-      const app = appSdk.getApps().find(item => item.options.projectId === firebaseConfig.projectId)
-        || appSdk.initializeApp(firebaseConfig, "tapchat-media");
-      auth = authSdk.getAuth(app);
-      db = firestore.getFirestore(app);
+      const [firebase, authSdk, firestore] = await Promise.all([
+        import("./tapchat-firebase.js"),
+        import("https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"),
+        import("https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js")
+      ]);
+      auth = firebase.auth;
+      db = firebase.db;
       firebaseSdk = { authSdk, firestore };
-      authSdk.onAuthStateChanged(auth, user => { currentUser = user; });
+      authSdk.onAuthStateChanged(auth, async user => {
+        currentUser = user;
+        if (!user) {
+          displayProfilePhoto(null);
+          return;
+        }
+
+        displayProfilePhoto(user.photoURL);
+        try {
+          const profile = await firestore.getDoc(firestore.doc(db, "users", user.uid));
+          if (currentUser?.uid !== user.uid) return;
+          displayProfilePhoto(profile.exists() ? profile.data().photoURL || user.photoURL : user.photoURL);
+        } catch (error) {
+          console.error("Could not load TapChat profile photo:", error);
+        }
+      });
     })();
     return initPromise;
+  }
+
+  function displayProfilePhoto(url) {
+    document.querySelectorAll("#sidebarPhoto, .profile-photo").forEach(image => {
+      if (url) image.src = url;
+      image.hidden = !url;
+    });
+    document.querySelectorAll("#sidebarInitials").forEach(initials => {
+      initials.hidden = Boolean(url);
+    });
   }
 
   async function requireUser() {
@@ -87,10 +103,7 @@
       mediaProvider: "cloudinary",
       updatedAt: serverTimestamp()
     }, { merge: true });
-    document.querySelectorAll("#sidebarPhoto, .profile-photo").forEach(image => {
-      image.src = uploaded.url;
-      image.hidden = false;
-    });
+    displayProfilePhoto(uploaded.url);
     return uploaded.url;
   }
 
@@ -185,7 +198,7 @@
   }
 
   function connectChatAttachment() {
-    const form = document.getElementById("messageForm") || document.querySelector(".message-composer");
+    const form = document.querySelector("[data-tapchat-chat-media]");
     if (!form || document.getElementById("tapchatMediaInput")) return;
     const button = document.createElement("button");
     button.type = "button";
@@ -211,7 +224,6 @@
         toast("Uploading media to Cloudinary...");
         const uploaded = await upload(file);
         await saveChatMedia(uploaded, caption);
-        appendMedia(uploaded, caption);
         if (textInput) textInput.value = "";
         toast("Media URL saved to Firestore.");
       } catch (error) {

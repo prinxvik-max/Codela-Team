@@ -879,16 +879,12 @@ This matches the Friend Requests page.
 
 /* 1. FIREBASE IMPORTS */
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-
 import {
-  getAuth,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { auth, db } from "./tapchat-firebase.js";
 
 import {
-  getFirestore,
   collection,
   doc,
   getDoc,
@@ -899,26 +895,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 
-/* 2. FIREBASE CONFIGURATION */
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-
-/* 3. INITIALIZE FIREBASE */
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-
-/* 4. PAGE VARIABLES */
+/* 2. PAGE VARIABLES */
 
 let currentUser = null;
 let friends = [];
